@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>티처 과제관리 - 핵심화면</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: #f5f7fa;
+            padding: 40px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 16px;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 화면 그리드 */
+        .screens-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* 화면 카드 */
+        .screen-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .screen-header {
+            background: #2c3e50;
+            color: white;
+            padding: 16px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .screen-header .step {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        /* 웹 프레임 */
+        .web-frame {
+            background: #fafafa;
+            min-height: 500px;
+            display: flex;
+        }
+
+        /* 사이드바 */
+        .sidebar {
+            width: 200px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            padding: 20px 0;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            padding: 0 20px 20px;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-item {
+            padding: 12px 20px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-item:hover {
+            background: #f8f9fa;
+        }
+
+        .sidebar-item.active {
+            background: #f0f0f0;
+            color: #2c3e50;
+            font-weight: 600;
+            border-left: 3px solid #2c3e50;
+        }
+
+        .sidebar-submenu {
+            padding-left: 44px;
+        }
+
+        .sidebar-submenu .sidebar-item {
+            padding: 10px 20px;
+            font-size: 13px;
+        }
+
+        /* 메인 컨텐츠 */
+        .main-content {
+            flex: 1;
+            padding: 24px 32px;
+            overflow: auto;
+        }
+
+        /* 헤더 */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        /* 탭 */
+        .tabs {
+            display: flex;
+            gap: 24px;
+            border-bottom: 1px solid #e9ecef;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 12px 0;
+            font-size: 15px;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab.active {
+            color: #2c3e50;
+            font-weight: 600;
+            border-bottom-color: #2c3e50;
+        }
+
+        /* 버튼 */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #2c3e50;
+            border: 1px solid #2c3e50;
+        }
+
+        /* 검색 & 필터 */
+        .search-filter {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            max-width: 400px;
+            padding: 10px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .filter-btn {
+            padding: 10px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 테이블 */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table td {
+            padding: 16px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:hover {
+            background: #fafafa;
+        }
+
+        /* 상태 배지 */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-closed {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        /* 진행률 바 */
+        .progress-bar {
+            width: 100px;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #28a745;
+            border-radius: 3px;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* 폼 영역 */
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e9ecef;
+            margin-bottom: 20px;
+        }
+
+        .form-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* 체크박스 리스트 */
+        .checkbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .checkbox-item .deadline-input {
+            margin-left: auto;
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 13px;
+            width: 180px;
+        }
+
+        /* 제출 현황 카드 */
+        .submission-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+        }
+
+        .submission-header {
+            padding: 16px 20px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .submission-stats {
+            display: flex;
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* 학생 리스트 */
+        .student-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .student-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            gap: 16px;
+        }
+
+        .student-item:last-child {
+            border-bottom: none;
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            background: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .student-meta {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .student-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* 피드백 입력 영역 */
+        .feedback-input-area {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 16px;
+        }
+
+        .feedback-row {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .score-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .score-input {
+            width: 100px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .score-type {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+        }
+
+        .feedback-textarea {
+            flex: 1;
+            min-height: 80px;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        /* 라디오 그룹 */
+        .radio-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .radio-item.selected {
+            border-color: #2c3e50;
+            background: #f8f9fa;
+        }
+
+        .radio-item input {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* 화면 설명 */
+        .screen-description {
+            padding: 16px 20px;
+            background: #fff9e6;
+            border-top: 1px solid #f0e6c8;
+            font-size: 13px;
+            color: #856404;
+        }
+
+        /* 액션 버튼 그룹 */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* 더보기 메뉴 */
+        .more-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #888;
+        }
+
+        /* 제출물 미리보기 */
+        .submission-preview {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .submission-preview-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .submission-preview-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .submission-files {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .submission-file {
+            width: 60px;
+            height: 60px;
+            background: #e9ecef;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666;
+        }
+
+        /* 수업 연결 박스 */
+        .class-link-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .class-link-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .class-link-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .class-link-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .class-link-count {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .remove-btn {
+            color: #dc3545;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .add-class-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            color: #888;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* 섹션 구분 */
+        .section-divider {
+            border-top: 1px solid #e9ecef;
+            margin: 24px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>티처 과제관리 - 핵심화면</h1>
+        <p class="subtitle">선생님의 과제 생성 → 수업 연결 → 제출 대상 설정 → 피드백 작성 플로우</p>
+
+        <div class="screens-grid">
+            <!-- 화면 1: 과제 목록 -->
+            <div class="screen-card">
+                <div class="screen-header">
+                    <span class="step">1</span>
+                    과제 목록
+                </div>
+                <div class="web-frame">
+                    <div class="sidebar">
+                        <div class="sidebar-logo">⊞ 티처꾸그</div>
+                        <ul class="sidebar-menu">
+                            <li class="sidebar-item">🏠 홈</li>
+                            <li class="sidebar-item">📁 내 수업</li>
+                            <li class="sidebar-item active">📝 과제관리</li>
+                            <li class="sidebar-item">📅 스케줄</li>
+                            <li class="sidebar-item">👥 학생 목록</li>
+                            <li class="sidebar-item">⭐ 후기 관리</li>
+                            <li class="sidebar-item">💬 대화</li>
+                            <li class="sidebar-item">💰 정산</li>
+                        </ul>
+                    </div>
+                    <div class="main-content">
+                        <div class="top-header">
+                            <div class="page-title">과제관리</div>
+                            <button class="btn btn-primary">+ 새 과제 만들기</button>
+                        </div>
+                        <div class="tabs">
+                            <div class="tab active">전체</div>
+                            <div class="tab">진행중</div>
+                            <div class="tab">마감</div>
+                        </div>
+                        <div class="search-filter">
+                            <input type="text" class="search-input" placeholder="🔍 과제명으로 검색">
+                            <button class="filter-btn">수업 필터 ▾</button>
+                            <div style="margin-left: auto; font-size: 13px; color: #888;">총 5개</div>
+                        </div>
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px;"><input type="checkbox"></th>
+                                        <th>과제명</th>
+                                        <th>연결 수업</th>
+                                        <th>제출 현황</th>
+                                        <th>마감일</th>
+                                        <th>상태</th>
+                                        <th style="width: 50px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="checkbox"></td>
+                                        <td style="font-weight: 600;">레고 작품 사진 제출하기</td>
+                                        <td>무한한 상상력! 레고로 완성하는 작은 세상</td>
+                                        <td>
+                                            <div class="progress-bar"><div class="progress-fill" style="width: 60%;"></div></div>
+                                            <div class="progress-text">12/20명 제출</div>
+                                        </td>
+                                        <td>2024-12-05</td>
+                                        <td><span class="status-badge status-active">진행중</span></td>
+                                        <td><button class="more-btn">⋮</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox"></td>
+                                        <td style="font-weight: 600;">동물 관찰 일기 작성</td>
+                                        <td>신기한 동물의 세계</td>
+                                        <td>
+                                            <div class="progress-bar"><div class="progress-fill" style="width: 30%;"></div></div>
+                                            <div class="progress-text">6/20명 제출</div>
+                                        </td>
+                                        <td>2024-12-09</td>
+                                        <td><span class="status-badge status-active">진행중</span></td>
+                                        <td><button class="more-btn">⋮</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox"></td>
+                                        <td style="font-weight: 600;">나만의 이야기 만들기</td>
+                                        <td>창의력 글쓰기 교실</td>
+                                        <td>
+                                            <div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div>
+                                            <div class="progress-text">15/15명 제출</div>
+                                        </td>
+                                        <td>2024-11-30</td>
+                                        <td><span class="status-badge status-closed">마감</span></td>
+                                        <td><button class="more-btn">⋮</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen-description">
+                    💡 과제 목록에서 전체 과제 현황을 한눈에 확인할 수 있습니다. 진행률과 마감일을 기준으로 관리합니다.
+                </div>
+            </div>
+
+            <!-- 화면 2: 과제 생성 -->
+            <div class="screen-card">
+                <div class="screen-header">
+                    <span class="step">2</span>
+                    과제 생성
+                </div>
+                <div class="web-frame">
+                    <div class="sidebar">
+                        <div class="sidebar-logo">⊞ 티처꾸그</div>
+                        <ul class="sidebar-menu">
+                            <li class="sidebar-item">🏠 홈</li>
+                            <li class="sidebar-item">📁 내 수업</li>
+                            <li class="sidebar-item active">📝 과제관리</li>
+                            <li class="sidebar-item">📅 스케줄</li>
+                            <li class="sidebar-item">👥 학생 목록</li>
+                        </ul>
+                    </div>
+                    <div class="main-content">
+                        <div class="top-header">
+                            <div class="page-title">새 과제 만들기</div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-title">📝 과제 내용</div>
+                            <div class="form-group">
+                                <label class="form-label">과제 제목 *</label>
+                                <input type="text" class="form-input" placeholder="과제 제목을 입력하세요" value="레고 작품 사진 제출하기">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">과제 설명</label>
+                                <textarea class="form-textarea" placeholder="과제에 대한 설명을 입력하세요">이번 수업에서 만든 레고 작품을 사진으로 찍어서 제출해주세요!
+
+📸 제출 방법:
+1. 완성된 작품을 여러 각도에서 촬영
+2. 가장 잘 나온 사진 2~3장 선택
+3. 작품에 대한 간단한 설명 작성</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">첨부 파일</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <div class="add-class-btn" style="width: 80px; height: 80px; flex-direction: column;">
+                                        <span style="font-size: 24px;">+</span>
+                                        <span style="font-size: 11px;">파일 추가</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-title">📊 점수 유형 설정</div>
+                            <div class="radio-group">
+                                <label class="radio-item selected">
+                                    <input type="radio" name="score" checked> 100점 만점형
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="score"> Pass / Fail
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-title">📚 수업 연결</div>
+                            <div class="class-link-box">
+                                <div class="class-link-item">
+                                    <div class="class-link-info">
+                                        <span>📕</span>
+                                        <div>
+                                            <div class="class-link-name">무한한 상상력! 레고로 완성하는 작은 세상</div>
+                                            <div class="class-link-count">스케줄 3개</div>
+                                        </div>
+                                    </div>
+                                    <span class="remove-btn">✕ 삭제</span>
+                                </div>
+                                <div class="add-class-btn">+ 수업 추가하기</div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-title">🎯 제출 대상 및 마감일 설정</div>
+                            <div class="checkbox-list">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" checked>
+                                    <label>수업 전체</label>
+                                    <input type="datetime-local" class="deadline-input" value="2024-12-05T23:59">
+                                </div>
+                                <div style="padding-left: 28px; font-size: 13px; color: #888; margin: -4px 0 8px;">또는 스케줄 개별 선택</div>
+                                <div class="checkbox-item" style="opacity: 0.5;">
+                                    <input type="checkbox" disabled>
+                                    <label>A스케줄 (월/수 10:00) - 8명</label>
+                                    <input type="datetime-local" class="deadline-input" disabled>
+                                </div>
+                                <div class="checkbox-item" style="opacity: 0.5;">
+                                    <input type="checkbox" disabled>
+                                    <label>B스케줄 (화/목 14:00) - 7명</label>
+                                    <input type="datetime-local" class="deadline-input" disabled>
+                                </div>
+                                <div class="checkbox-item" style="opacity: 0.5;">
+                                    <input type="checkbox" disabled>
+                                    <label>C스케줄 (토 10:00) - 5명</label>
+                                    <input type="datetime-local" class="deadline-input" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary">취소</button>
+                            <button class="btn btn-outline">임시저장</button>
+                            <button class="btn btn-primary">과제 출제하기</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen-description">
+                    💡 과제 생성 시 수업을 연결하고, 제출 대상(수업 전체 또는 특정 스케줄)별로 마감일을 설정합니다.
+                </div>
+            </div>
+
+            <!-- 화면 3: 제출 현황 -->
+            <div class="screen-card">
+                <div class="screen-header">
+                    <span class="step">3</span>
+                    제출 현황 확인
+                </div>
+                <div class="web-frame">
+                    <div class="sidebar">
+                        <div class="sidebar-logo">⊞ 티처꾸그</div>
+                        <ul class="sidebar-menu">
+                            <li class="sidebar-item">🏠 홈</li>
+                            <li class="sidebar-item">📁 내 수업</li>
+                            <li class="sidebar-item active">📝 과제관리</li>
+                            <li class="sidebar-item">📅 스케줄</li>
+                            <li class="sidebar-item">👥 학생 목록</li>
+                        </ul>
+                    </div>
+                    <div class="main-content">
+                        <div class="top-header">
+                            <div class="page-title">레고 작품 사진 제출하기</div>
+                            <button class="btn btn-outline">✏️ 과제 수정</button>
+                        </div>
+                        <div class="tabs">
+                            <div class="tab active">제출 현황</div>
+                            <div class="tab">과제 상세</div>
+                        </div>
+
+                        <div class="submission-card">
+                            <div class="submission-header">
+                                <div class="submission-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-number">20</div>
+                                        <div class="stat-label">전체</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number" style="color: #28a745;">12</div>
+                                        <div class="stat-label">제출</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number" style="color: #dc3545;">8</div>
+                                        <div class="stat-label">미제출</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number" style="color: #0984e3;">5</div>
+                                        <div class="stat-label">피드백 완료</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="filter-btn">스케줄 전체 ▾</button>
+                                    <button class="filter-btn">상태 전체 ▾</button>
+                                </div>
+                            </div>
+                            <div class="student-list">
+                                <div class="student-item" style="background: #f0f7ff;">
+                                    <div class="student-avatar">꾸</div>
+                                    <div class="student-info">
+                                        <div class="student-name">꾸그아</div>
+                                        <div class="student-meta">A스케줄 · 12월 4일 14:30 제출</div>
+                                    </div>
+                                    <div class="student-status">
+                                        <span class="status-badge status-pending">피드백 대기</span>
+                                        <button class="btn btn-primary" style="padding: 8px 16px; font-size: 13px;">피드백 작성</button>
+                                    </div>
+                                </div>
+                                <div class="student-item">
+                                    <div class="student-avatar">백</div>
+                                    <div class="student-info">
+                                        <div class="student-name">백스</div>
+                                        <div class="student-meta">A스케줄 · 12월 3일 10:22 제출</div>
+                                    </div>
+                                    <div class="student-status">
+                                        <span class="status-badge status-active">피드백 완료</span>
+                                        <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 13px;">보기</button>
+                                    </div>
+                                </div>
+                                <div class="student-item">
+                                    <div class="student-avatar">소</div>
+                                    <div class="student-info">
+                                        <div class="student-name">소혜지</div>
+                                        <div class="student-meta">B스케줄 · 미제출</div>
+                                    </div>
+                                    <div class="student-status">
+                                        <span class="status-badge status-closed">미제출</span>
+                                        <span style="font-size: 12px; color: #888;">D-1</span>
+                                    </div>
+                                </div>
+                                <div class="student-item">
+                                    <div class="student-avatar">나</div>
+                                    <div class="student-info">
+                                        <div class="student-name">나나</div>
+                                        <div class="student-meta">B스케줄 · 12월 4일 09:15 제출</div>
+                                    </div>
+                                    <div class="student-status">
+                                        <span class="status-badge status-pending">피드백 대기</span>
+                                        <button class="btn btn-primary" style="padding: 8px 16px; font-size: 13px;">피드백 작성</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen-description">
+                    💡 제출 현황에서 학생별 제출 상태를 확인하고, 피드백이 필요한 학생에게 바로 피드백을 작성할 수 있습니다.
+                </div>
+            </div>
+
+            <!-- 화면 4: 피드백 작성 -->
+            <div class="screen-card">
+                <div class="screen-header">
+                    <span class="step">4</span>
+                    피드백 작성
+                </div>
+                <div class="web-frame">
+                    <div class="sidebar">
+                        <div class="sidebar-logo">⊞ 티처꾸그</div>
+                        <ul class="sidebar-menu">
+                            <li class="sidebar-item">🏠 홈</li>
+                            <li class="sidebar-item">📁 내 수업</li>
+                            <li class="sidebar-item active">📝 과제관리</li>
+                            <li class="sidebar-item">📅 스케줄</li>
+                            <li class="sidebar-item">👥 학생 목록</li>
+                        </ul>
+                    </div>
+                    <div class="main-content">
+                        <div class="top-header">
+                            <div class="page-title">← 피드백 작성</div>
+                        </div>
+
+                        <div style="display: flex; gap: 24px;">
+                            <!-- 왼쪽: 학생 제출물 -->
+                            <div style="flex: 1;">
+                                <div class="form-section">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <div>
+                                            <div style="font-size: 18px; font-weight: 700; color: #2c3e50;">꾸그아</div>
+                                            <div style="font-size: 13px; color: #888;">A스케줄 · 무한한 상상력! 레고로 완성하는 작은 세상</div>
+                                        </div>
+                                        <span class="status-badge status-pending">피드백 대기</span>
+                                    </div>
+                                    <div class="section-divider"></div>
+                                    <div class="form-title">📄 제출 내용</div>
+                                    <div style="font-size: 13px; color: #888; margin-bottom: 8px;">2024년 12월 4일 14:30 제출</div>
+                                    <div class="submission-preview">
+                                        <div class="submission-preview-content">
+                                            우주 정거장을 만들어봤어요! 태양광 패널이랑 안테나도 달았어요. 우주인이 타고 있는 우주선도 만들었습니다. 엄마가 도와주셨어요!
+                                        </div>
+                                        <div class="submission-files">
+                                            <div class="submission-file">🖼<br>사진1.jpg</div>
+                                            <div class="submission-file">🖼<br>사진2.jpg</div>
+                                            <div class="submission-file">🖼<br>사진3.jpg</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 오른쪽: 피드백 입력 -->
+                            <div style="flex: 1;">
+                                <div class="form-section">
+                                    <div class="form-title">✍️ 피드백 작성</div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">점수 (필수) *</label>
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <input type="number" class="score-input" value="95" min="0" max="100">
+                                            <span style="font-size: 16px; color: #666;">/ 100점</span>
+                                        </div>
+                                        <div style="font-size: 12px; color: #888; margin-top: 8px;">* 점수를 입력해야 피드백이 완료됩니다</div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">서술형 피드백 (선택)</label>
+                                        <textarea class="form-textarea" placeholder="학생에게 전달할 피드백을 작성해주세요...">우와! 우주 정거장 정말 멋지게 만들었네요! 🚀
+
+태양광 패널 디테일이 특히 인상적이에요. 우주인과 우주선까지 함께 만들어서 스토리가 느껴지는 작품이에요.
+
+다음에는 지구나 달도 같이 만들어보면 어떨까요?</textarea>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">첨부 파일 (선택)</label>
+                                        <div class="add-class-btn" style="width: 100%;">+ 파일 첨부</div>
+                                    </div>
+
+                                    <div class="action-buttons" style="margin-top: 32px;">
+                                        <button class="btn btn-secondary">취소</button>
+                                        <button class="btn btn-primary">피드백 완료</button>
+                                    </div>
+
+                                    <div style="margin-top: 16px; padding: 12px 16px; background: #fff3cd; border-radius: 8px; font-size: 13px; color: #856404;">
+                                        🔔 피드백 완료 시 학생과 보호자에게 알림이 발송됩니다.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen-description">
+                    💡 학생의 제출물을 확인하고 점수(필수)와 서술형 피드백(선택)을 작성합니다. 완료 시 알림이 발송됩니다.
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

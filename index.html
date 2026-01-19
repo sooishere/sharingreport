@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 활용 사례 공유</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            min-height: 85vh;
+            padding: 60px 80px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 슬라이드 타입별 스타일 */
+        .slide.cover {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .slide.section {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .slide.content {
+            justify-content: flex-start;
+        }
+
+        /* 타이포그래피 */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .slide.section h1 {
+            color: white;
+            font-size: 3rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 40px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #718096;
+            margin-bottom: 40px;
+        }
+
+        .slide.section .subtitle {
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* 컨텐츠 스타일 */
+        .problem-box {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 28px 36px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .problem-box h3 {
+            color: #991b1b;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .solution-box {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 28px 36px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .solution-box h3 {
+            color: #1e40af;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            font-size: 1.2rem;
+            color: #374151;
+            padding: 10px 0;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.7;
+        }
+
+        ul li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 18px;
+            width: 8px;
+            height: 8px;
+            background: #2563eb;
+            border-radius: 50%;
+        }
+
+        .problem-box ul li::before {
+            background: #ef4444;
+        }
+
+        .solution-box ul li::before {
+            background: #2563eb;
+        }
+
+        /* 워크플로우 다이어그램 */
+        .workflow-diagram {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 36px;
+            margin: 30px 0;
+        }
+
+        .workflow-steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .workflow-step {
+            background: white;
+            padding: 14px 22px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #374151;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .workflow-step.highlight {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .workflow-arrow {
+            font-size: 1.3rem;
+            color: #94a3b8;
+        }
+
+        /* PM 워크플로우 특별 스타일 */
+        .pm-workflow {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .pm-workflow-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .pm-workflow-step {
+            background: white;
+            padding: 18px 28px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            min-width: 140px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .pm-workflow-step.primary {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .pm-workflow-step .step-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .pm-workflow-step .step-desc {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* 코드 블록 */
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 24px 28px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            margin: 20px 0;
+            white-space: pre-wrap;
+        }
+
+        /* 하이라이트 카드 */
+        .highlight-card {
+            background: linear-gradient(135deg, #1e3a5f 0%, #3b82f6 100%);
+            color: white;
+            padding: 48px 56px;
+            border-radius: 16px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .highlight-card h2 {
+            color: white;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .highlight-card p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        /* 리스트 카드 그리드 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 24px 28px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card h4 {
+            color: #1e3a5f;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .card p {
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* 네비게이션 */
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: #2563eb;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #1e3a5f;
+        }
+
+        .nav-btn:disabled {
+            background: #e2e8f0;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        /* 페이지 번호 */
+        .page-number {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-size: 1rem;
+            color: #a0aec0;
+        }
+
+        /* 애니메이션 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide.active > * {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* 팁 박스 */
+        .tip-box {
+            background: #f0f9ff;
+            border-left: 4px solid #2563eb;
+            padding: 20px 28px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .tip-box h4 {
+            color: #1e3a5f;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .tip-box p {
+            color: #374151;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* 인용구 */
+        .quote {
+            font-size: 1.6rem;
+            font-style: normal;
+            color: #1e3a5f;
+            text-align: center;
+            padding: 36px;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .quote::before {
+            content: '';
+        }
+
+        /* 마무리 슬라이드 */
+        .ending-points {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 30px 0;
+        }
+
+        .ending-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            background: #f8fafc;
+            padding: 24px 28px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .ending-point .number {
+            background: #2563eb;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .ending-point .content h4 {
+            font-size: 1.15rem;
+            color: #1e3a5f;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .ending-point .content p {
+            font-size: 1rem;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* === 인터랙티브 카드 스타일 === */
+        .interactive-card {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        .interactive-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+        }
+
+        .interactive-card .card-header {
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .interactive-card .card-header h4 {
+            color: #1e3a5f;
+            font-size: 0.95rem;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .interactive-card .card-header .toggle-icon {
+            font-size: 1rem;
+            color: #2563eb;
+            transition: transform 0.3s ease;
+        }
+
+        .interactive-card.expanded .card-header .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .interactive-card .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 18px;
+        }
+
+        .interactive-card.expanded .card-content {
+            max-height: 500px;
+            padding: 0 18px 18px 18px;
+        }
+
+        .interactive-card .card-preview {
+            padding: 0 18px 14px 18px;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .interactive-card.expanded .card-preview {
+            display: none;
+        }
+
+        /* 클릭 가능한 워크플로우 스텝 */
+        .clickable-step {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .clickable-step:hover {
+            background: #1e3a5f !important;
+            color: white !important;
+            border-color: #1e3a5f !important;
+        }
+
+        .clickable-step::after {
+            content: "클릭";
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.65rem;
+            color: #94a3b8;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .clickable-step:hover::after {
+            opacity: 1;
+        }
+
+        /* 모달 스타일 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(30, 58, 95, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeInModal 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 36px;
+            max-width: 560px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUpModal 0.2s ease;
+        }
+
+        @keyframes slideUpModal {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 1.8rem;
+            color: #94a3b8;
+            cursor: pointer;
+            border: none;
+            background: none;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #1e3a5f;
+        }
+
+        .modal-content h3 {
+            color: #1e3a5f;
+            margin-bottom: 20px;
+            padding-right: 40px;
+            font-weight: 600;
+        }
+
+        .modal-content .detail-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal-content .detail-list li {
+            padding: 12px 0;
+            padding-left: 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            color: #374151;
+        }
+
+        .modal-content .detail-list li::before {
+            content: none;
+        }
+
+        .modal-content .detail-list li:last-child {
+            border-bottom: none;
+        }
+
+        .modal-content .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .modal-content .badge.purple {
+            background: #2563eb;
+            color: white;
+        }
+
+        .modal-content .badge.blue {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .modal-content .badge.orange {
+            background: #f97316;
+            color: white;
+        }
+
+        .modal-content .badge.green {
+            background: #10b981;
+            color: white;
+        }
+
+        /* 탭 인터페이스 */
+        .tab-container {
+            margin: 20px 0;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 8px 18px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+
+        .tab-btn:hover {
+            border-color: #2563eb;
+            color: #1e3a5f;
+        }
+
+        .tab-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- 슬라이드 1: 표지 -->
+        <div class="slide cover active" id="slide1">
+            <h1>AI 활용 사례 공유</h1>
+            <p class="subtitle">쿼리 짜지 않고 나만의 데이터 분석 팀 돌리기<br>PM 업무플로우 자동화 하기</p>
+            <div class="page-number">1 / 16</div>
+        </div>
+
+        <!-- 슬라이드 2: 섹션 - 데이터 분석 -->
+        <div class="slide section" id="slide2">
+            <h1>쿼리 짜지 않고<br>나만의 데이터 분석팀 돌리기</h1>
+            <p class="subtitle">Part 1</p>
+            <div class="page-number">2 / 16</div>
+        </div>
+
+        <!-- 슬라이드 3: 문제 -->
+        <div class="slide content" id="slide3">
+            <h2>문제</h2>
+            <div class="problem-box">
+                <h3>나 스스로 데이터를 원하는 만큼 뽑아서 보고 싶다</h3>
+                <ul>
+                    <li>혼자 쿼리 짜기 너무 어려워</li>
+                    <li>바쁜 데이터 분석팀에게 요청하면 받기까지 시간이 너무 오래 걸려</li>
+                    <li>추가 분석하고 싶은데 어떻게 하지?</li>
+                </ul>
+            </div>
+            <div class="page-number">3 / 16</div>
+        </div>
+
+        <!-- 슬라이드 4: 1차 솔루션 -->
+        <div class="slide content" id="slide4">
+            <h2>1차 솔루션</h2>
+            <div class="solution-box">
+                <h3>MCP 연결하면 묻기만 해도 데이터가 나오네?</h3>
+                <ul>
+                    <li>커서나 클로드에 앰플리튜드 MCP, 빅쿼리 MCP를 연결</li>
+                </ul>
+            </div>
+            <div class="problem-box" style="margin-top: 30px;">
+                <h3>하지만...</h3>
+                <ul>
+                    <li>자기 맘대로 뽑는 데이터</li>
+                    <li>맞는지 알 수 없는 데이터</li>
+                </ul>
+            </div>
+            <div class="page-number">4 / 16</div>
+        </div>
+
+        <!-- 슬라이드 5: 2차 솔루션 -->
+        <div class="slide content" id="slide5">
+            <h2>2차 솔루션</h2>
+            <div class="solution-box" style="display: flex; gap: 30px; align-items: flex-start;">
+                <div style="flex: 1;">
+                    <h3>배경지식을 넣어주자!</h3>
+                    <ul>
+                        <li>빅쿼리 테이블 정보 공부해!</li>
+                        <li>앰플리튜드 데이터 공부해!</li>
+                        <li>우리 서비스 공부해!</li>
+                        <li>우리 지표구조 공부해!</li>
+                    </ul>
+                </div>
+                <div style="flex: 1.2;">
+                    <img src="knowledge-base-structure.png" alt="Knowledge Base 파일 구조" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                </div>
+            </div>
+            <div class="problem-box" style="margin-top: 30px;">
+                <h3>하지만...</h3>
+                <ul>
+                    <li>프롬프트에 따라 그때 그때 달라지는 결과들</li>
+                </ul>
+            </div>
+            <div class="page-number">5 / 16</div>
+        </div>
+
+        <!-- 슬라이드 6: 3차 솔루션 - 인터랙티브 상세 워크플로우 -->
+        <div class="slide content" id="slide6" style="padding: 40px 60px;">
+            <h2 style="margin-bottom: 15px;">3차 솔루션: 클로드 스킬 도입 (data-analysis)</h2>
+            <p style="color: #718096; margin-bottom: 20px; font-size: 1rem;">각 단계를 클릭하면 상세 내용을 확인할 수 있습니다</p>
+
+            <!-- 워크플로우 다이어그램 (클릭 가능) -->
+            <div class="workflow-diagram" style="padding: 25px; margin: 10px 0;">
+                <div class="workflow-steps" style="gap: 8px;">
+                    <div class="workflow-step clickable-step" style="padding: 12px 18px; font-size: 0.85rem;" onclick="openModal('request')">데이터 요청</div>
+                    <div class="workflow-arrow" style="font-size: 1.2rem;">→</div>
+                    <div class="workflow-step highlight clickable-step" style="padding: 12px 18px; font-size: 0.85rem;" onclick="openModal('knowledge')">지식베이스 탐색</div>
+                    <div class="workflow-arrow" style="font-size: 1.2rem;">→</div>
+                    <div class="workflow-step clickable-step" style="padding: 12px 18px; font-size: 0.85rem;" onclick="openModal('plan')">분석 계획 수립</div>
+                    <div class="workflow-arrow" style="font-size: 1.2rem;">→</div>
+                    <div class="workflow-step highlight clickable-step" style="padding: 12px 18px; font-size: 0.85rem;" onclick="openModal('validate')">계획 검증</div>
+                    <div class="workflow-arrow" style="font-size: 1.2rem;">→</div>
+                    <div class="workflow-step clickable-step" style="padding: 12px 18px; font-size: 0.85rem; background: #fef3c7; color: #92400e; border: 2px solid #f59e0b;" onclick="openModal('approve')">승인</div>
+                    <div class="workflow-arrow" style="font-size: 1.2rem;">→</div>
+                    <div class="workflow-step highlight clickable-step" style="padding: 12px 18px; font-size: 0.85rem;" onclick="openModal('execute')">분석 실행</div>
+                    <div class="workflow-arrow" style="font-size: 1.2rem;">→</div>
+                    <div class="workflow-step clickable-step" style="padding: 12px 18px; font-size: 0.85rem;" onclick="openModal('result')">결과 검증</div>
+                    <div class="workflow-arrow" style="font-size: 1.2rem;">→</div>
+                    <div class="workflow-step" style="padding: 12px 18px; font-size: 0.85rem; background: #d1fae5; color: #065f46; border: 2px solid #10b981;">최종 결과</div>
+                </div>
+            </div>
+
+            <!-- 인터랙티브 카드 그리드 -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px;">
+                <!-- 요청 구분 카드 -->
+                <div class="interactive-card" onclick="toggleCard(this)">
+                    <div class="card-header">
+                        <h4>1. 요청 구분 (4가지 모드)</h4>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="card-preview">ad-hoc, diagnostic, hypothesis, performance 중 자동 선택</div>
+                    <div class="card-content">
+                        <div style="font-size: 0.85rem; color: #4a5568; line-height: 1.8;">
+                            <div style="padding: 8px; background: #e2e8f0; border-radius: 8px; margin-bottom: 8px;">
+                                <strong style="color: #1a1a2e;">ad-hoc</strong> - "파악해줘", "확인해줘", "얼마야"<br>
+                                <span style="color: #718096;">→ 간단한 수치 확인, 즉시 결과 반환</span>
+                            </div>
+                            <div style="padding: 8px; background: #fed7d7; border-radius: 8px; margin-bottom: 8px;">
+                                <strong style="color: #c53030;">diagnostic</strong> - "심층 분석", "왜", "원인"<br>
+                                <span style="color: #718096;">→ 체계적 진단 리포트, 원인 분석</span>
+                            </div>
+                            <div style="padding: 8px; background: #fef3c7; border-radius: 8px; margin-bottom: 8px;">
+                                <strong style="color: #92400e;">hypothesis</strong> - "검증해줘", "맞는지 확인"<br>
+                                <span style="color: #718096;">→ 특정 가설 검증, 통계적 유의성</span>
+                            </div>
+                            <div style="padding: 8px; background: #c6f6d5; border-radius: 8px;">
+                                <strong style="color: #276749;">performance</strong> - "배포 결과", "성과 분석"<br>
+                                <span style="color: #718096;">→ 배포/실험 성과 측정</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 지식베이스 카드 -->
+                <div class="interactive-card" onclick="toggleCard(this)">
+                    <div class="card-header">
+                        <h4>2. 지식베이스 탐색</h4>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="card-preview">5개 핵심 문서를 참조하여 정확한 데이터소스 선정</div>
+                    <div class="card-content">
+                        <div style="font-size: 0.85rem; color: #4a5568; line-height: 1.8;">
+                            <div style="padding: 6px 10px; background: #edf2f7; border-radius: 6px; margin-bottom: 6px;">
+                                <code style="color: #2563eb;">database_schema_reference.md</code><br>
+                                <span style="color: #718096;">BigQuery 테이블, 필드, 관계 정의</span>
+                            </div>
+                            <div style="padding: 6px 10px; background: #edf2f7; border-radius: 6px; margin-bottom: 6px;">
+                                <code style="color: #2563eb;">amplitude-events.md</code><br>
+                                <span style="color: #718096;">이벤트명, 프로퍼티, 수집 조건</span>
+                            </div>
+                            <div style="padding: 6px 10px; background: #edf2f7; border-radius: 6px; margin-bottom: 6px;">
+                                <code style="color: #2563eb;">metrics-definition.md</code><br>
+                                <span style="color: #718096;">지표 정의, 계산식, 기준</span>
+                            </div>
+                            <div style="padding: 6px 10px; background: #edf2f7; border-radius: 6px; margin-bottom: 6px;">
+                                <code style="color: #2563eb;">tableau-dashboards.md</code><br>
+                                <span style="color: #718096;">기존 대시보드, 기준 데이터</span>
+                            </div>
+                            <div style="padding: 6px 10px; background: #edf2f7; border-radius: 6px;">
+                                <code style="color: #2563eb;">user-segments.md</code><br>
+                                <span style="color: #718096;">유저 세그먼트 정의</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 계획 검증 카드 -->
+                <div class="interactive-card" onclick="toggleCard(this)">
+                    <div class="card-header">
+                        <h4>3. 계획 검증 (4단계 자동 점검)</h4>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="card-preview">사람에게 공유하기 전 4단계 자동 검증 수행</div>
+                    <div class="card-content">
+                        <div style="font-size: 0.85rem; color: #4a5568; line-height: 1.8;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <span style="background: #2563eb; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">1</span>
+                                <div>
+                                    <strong>Knowledge Base 검증</strong><br>
+                                    <span style="color: #718096;">테이블/필드 존재 여부 확인</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <span style="background: #2563eb; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">2</span>
+                                <div>
+                                    <strong>Amplitude 검증</strong><br>
+                                    <span style="color: #718096;">이벤트/프로퍼티 실제 존재 확인</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                <span style="background: #2563eb; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">3</span>
+                                <div>
+                                    <strong>Tableau 검증</strong><br>
+                                    <span style="color: #718096;">기준선 참고 데이터 확보</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="background: #2563eb; color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">4</span>
+                                <div>
+                                    <strong>data-analyst 검토</strong><br>
+                                    <span style="color: #718096;">쿼리 로직, 필터 조건 검토</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 분석 실행 카드 -->
+                <div class="interactive-card" onclick="toggleCard(this)">
+                    <div class="card-header">
+                        <h4>4. 분석 실행 (MCP 도구)</h4>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="card-preview">3가지 데이터소스를 MCP로 직접 연결</div>
+                    <div class="card-content">
+                        <div style="font-size: 0.85rem; color: #4a5568; line-height: 1.8;">
+                            <div style="padding: 8px 12px; background: #e3f2fd; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #4285f4;">
+                                <span style="background: #4285f4; color: white; padding: 2px 10px; border-radius: 4px; font-weight: 600;">BigQuery</span><br>
+                                <code style="font-size: 0.8rem;">execute_sql</code> - SQL 쿼리 실행<br>
+                                <code style="font-size: 0.8rem;">get_table_info</code> - 테이블 정보 조회
+                            </div>
+                            <div style="padding: 8px 12px; background: #fff3e0; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #ff6b35;">
+                                <span style="background: #ff6b35; color: white; padding: 2px 10px; border-radius: 4px; font-weight: 600;">Amplitude</span><br>
+                                <code style="font-size: 0.8rem;">query_dataset</code> - 데이터셋 조회<br>
+                                <code style="font-size: 0.8rem;">search</code> - 이벤트 검색
+                            </div>
+                            <div style="padding: 8px 12px; background: #fbe9e7; border-radius: 8px; border-left: 4px solid #e97627;">
+                                <span style="background: #e97627; color: white; padding: 2px 10px; border-radius: 4px; font-weight: 600;">Tableau</span><br>
+                                <code style="font-size: 0.8rem;">get-view-data</code> - 뷰 데이터 조회<br>
+                                <code style="font-size: 0.8rem;">query-datasource</code> - 소스 쿼리
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 결과 검증 -->
+            <div class="tip-box" style="padding: 12px 20px; margin-top: 12px;">
+                <h4 style="font-size: 0.95rem; margin-bottom: 5px;">5. 결과 검증</h4>
+                <p style="font-size: 0.85rem; margin: 0;">기준선 대비 ±5% 오차 확인 · 세부 합계=전체 정합성 · BigQuery vs Amplitude vs Tableau 교차 검증</p>
+            </div>
+
+            <div class="page-number">6 / 16</div>
+        </div>
+
+        <!-- 슬라이드 7: 데이터 분석 실제 화면 -->
+        <div class="slide content" id="slide7" style="padding: 40px 60px;">
+            <h2 style="margin-bottom: 10px;">실제로 이렇게 분석해요</h2>
+            <p style="color: #718096; margin-bottom: 15px; font-size: 0.95rem;">좌우 버튼/A·D 키로 탐색 | <strong>이미지 클릭 시 확대</strong> | ESC로 닫기</p>
+
+            <!-- 이미지 갤러리 -->
+            <div style="position: relative; background: #1a1a2e; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                <!-- 이미지 컨테이너 -->
+                <div style="position: relative; display: flex; justify-content: center; align-items: center; min-height: 420px;">
+                    <img id="galleryImage" src="data-analysis-images/01.png" alt="데이터 분석 화면" onclick="openImageZoom()" style="max-width: 100%; max-height: 420px; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.3); cursor: zoom-in; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+
+                <!-- 네비게이션 버튼 -->
+                <button onclick="prevGalleryImage()" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); color: #1a1a2e; font-size: 1.5rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.2s;" onmouseover="this.style.background='white'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='translateY(-50%)'">◀</button>
+                <button onclick="nextGalleryImage()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); color: #1a1a2e; font-size: 1.5rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.2s;" onmouseover="this.style.background='white'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='translateY(-50%)'">▶</button>
+
+                <!-- 이미지 카운터 -->
+                <div style="text-align: center; margin-top: 15px;">
+                    <span id="galleryCounter" style="background: rgba(255,255,255,0.15); color: white; padding: 8px 20px; border-radius: 20px; font-size: 0.95rem;">1 / 10</span>
+                </div>
+
+                <!-- 썸네일 인디케이터 -->
+                <div style="display: flex; justify-content: center; gap: 8px; margin-top: 12px;">
+                    <span class="gallery-dot active" onclick="goToGalleryImage(1)" style="width: 10px; height: 10px; border-radius: 50%; background: white; cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery-dot" onclick="goToGalleryImage(2)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery-dot" onclick="goToGalleryImage(3)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery-dot" onclick="goToGalleryImage(4)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery-dot" onclick="goToGalleryImage(5)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery-dot" onclick="goToGalleryImage(6)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery-dot" onclick="goToGalleryImage(7)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery-dot" onclick="goToGalleryImage(8)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery-dot" onclick="goToGalleryImage(9)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery-dot" onclick="goToGalleryImage(10)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                </div>
+            </div>
+
+            <!-- 결과리포트 예시 버튼 -->
+            <div style="text-align: center; margin-top: 15px;">
+                <a href="example-report.html" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 1rem; box-shadow: 0 4px 12px rgba(16,185,129,0.3); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(16,185,129,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(16,185,129,0.3)'">
+                    📊 결과리포트 예시 보기
+                </a>
+            </div>
+
+            <div class="page-number">7 / 16</div>
+        </div>
+
+        <!-- 슬라이드 8: 결론 1 -->
+        <div class="slide content" id="slide8">
+            <div class="highlight-card" style="margin-top: 100px;">
+                <h2 style="font-size: 2.5rem;">이제는 어떤 분석도<br>정확도 있게 혼자할 수 있어요</h2>
+                <p style="margin-top: 20px;">쿼리를 몰라도, 데이터팀이 바빠도<br>일관된 품질의 분석 결과를 얻을 수 있습니다</p>
+            </div>
+            <div class="page-number">8 / 16</div>
+        </div>
+
+        <!-- 슬라이드 9: 섹션 - PM 워크플로우 -->
+        <div class="slide section" id="slide9">
+            <h1>PM 워크플로우<br>자동화하기</h1>
+            <p class="subtitle">Part 2</p>
+            <div class="page-number">9 / 16</div>
+        </div>
+
+        <!-- 슬라이드 10: 문제 2 -->
+        <div class="slide content" id="slide10">
+            <h2>문제</h2>
+            <div class="problem-box">
+                <h3>PM 업무의 병목들</h3>
+                <ul>
+                    <li>제안서랑 PRD 작성할 때 초안 쓰기까지가 너무 어렵고 오래 걸려</li>
+                    <li>내가 쓴 유저스토리, 요구사항 빠진 게 너무 많아</li>
+                    <li>사람들한테 시각적으로 기능을 보여주고 싶은데 프로토타입 만들기는 쉽지 않아</li>
+                </ul>
+            </div>
+            <div class="page-number">10 / 16</div>
+        </div>
+
+        <!-- 슬라이드 11: 솔루션 2 -->
+        <div class="slide content" id="slide11" style="padding: 35px 50px;">
+            <h2 style="margin-bottom: 15px;">솔루션: 클로드에게 워크플로우 구축 요청</h2>
+            <p style="color: #718096; margin-bottom: 15px; font-size: 0.95rem;">탭을 클릭하면 프롬프트 전체 내용을 확인할 수 있습니다</p>
+
+            <!-- 탭 인터페이스 -->
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchPromptTab('intro')">요청</button>
+                    <button class="tab-btn" onclick="switchPromptTab('current')">현황</button>
+                    <button class="tab-btn" onclick="switchPromptTab('direction')">원하는 방향</button>
+                    <button class="tab-btn" onclick="switchPromptTab('full')">전체 프롬프트</button>
+                </div>
+
+                <!-- 요청 탭 -->
+                <div class="tab-content active" id="tab-intro">
+                    <div class="code-block" style="font-size: 1.1rem; line-height: 1.8;">
+클로드와 클로드 코드에서의 워크플로우를 구축하고 싶은데 어디서부터 시작해야할지 모르겠어.
+워크플로우 구축에 필요한 클로드와 클로드 코드의 도구들을 제안해주고,
+실제 워크플로우 구축까지 도움을 주면 좋겠어.
+                    </div>
+                </div>
+
+                <!-- 현황 탭 -->
+                <div class="tab-content" id="tab-current">
+                    <div class="code-block" style="font-size: 1rem; line-height: 1.7;">
+[현황]
+1. 데이터분석 : 클로드 코드 또는 커서에 앰플리튜드, 빅쿼리 MCP를 연결해서 서비스 데이터 분석
+   1. 커서룰로 데이터 스키마, 이벤트 택소노미, 분석원칙을 만들어서 사용 중
+2. 기획 초안으로 작성한 서비스 정책, 유저 스토리를 클로드 코드에서 넣어서 검토하고
+   보완해서 작성하는 워크플로우 실행 중
+   1. 이 단계에서는 특별한 원칙이나 룰을 따로 만들어두고 있진 않음
+   2. 유저스토리 기반으로 HTML 프로토타이핑 정도 하고 있음
+3. 두개다 별도 폴더(프로젝트)로 진행 중
+                    </div>
+                </div>
+
+                <!-- 원하는 방향 탭 -->
+                <div class="tab-content" id="tab-direction">
+                    <div class="code-block" style="font-size: 0.95rem; line-height: 1.6;">
+[원하는 방향]
+1. 꾸그 서비스에 대한 전반적인 내용을 사전에 구성해놓고 서비스, 데이터 업데이트를 통해
+   지속적으로 내용을 업데이트 하고 싶음
+2. 데이터 현황 분석을 통해 큰 서비스 제품 전략과 비즈니스 전략을 도출하고자 함
+3. 비즈니스 전략, 제품 전략과 데이터 분석 내용, 인터뷰 및 고객 관찰 내용을 기반으로
+   기회 리스트를 뽑고자 함
+   1. 내가 창의적인 기회리스트 도출에 부족한 점이 많아서 아이디어를 창발하는데 도움받고 싶음
+   2. 필요한 경우 프로토타이핑을 여러개 만들면서 효과적인 기회리스트를 검토하고 싶음
+4. 기회리스트와 데이터 분석내용을 기반으로 PRD를 작성하고 싶어.
+   1. 기존 데이터 분석 결과와 고객 관찰결과, 제품 전략을 기반으로 진행배경, 목표지표 설정
+   2. 기회리스트 내용 기반으로 서비스 정책, 유저스토리, 스펙리스트, 상세 요구사항 도출
+5. 기회리스트를 배포하고 그 결과를 다시 데이터분석을 통해 분석
+6. 클로드의 아티팩트나 클로드 코드의 서브에이전트, 스킬 같은 도구들을 적극적으로 활용하고 싶음
+
+이런 워크플로우를 만들어서 진행한다고 할때 어디서부터 어디까지 세팅하고,
+어떤 도구들을 사용해야할지 모르겟어.
+
+더 확인하고 싶은 사항이 있다면 질문해줘
+                    </div>
+                </div>
+
+                <!-- 전체 프롬프트 탭 -->
+                <div class="tab-content" id="tab-full">
+                    <div class="code-block" style="font-size: 0.9rem; line-height: 1.6; max-height: 350px; overflow-y: auto;">
+클로드와 클로드 코드에서의 워크플로우를 구축하고 싶은데 어디서부터 시작해야할지 모르겠어.
+워크플로우 구축에 필요한 클로드와 클로드 코드의 도구들을 제안해주고, 실제 워크플로우 구축까지 도움을 주면 좋겠어.
+
+[현황]
+1. 데이터분석 : 클로드 코드 또는 커서에 앰플리튜드, 빅쿼리 MCP를 연결해서 서비스 데이터 분석
+   1. 커서룰로 데이터 스키마, 이벤트 택소노미, 분석원칙을 만들어서 사용 중
+2. 기획 초안으로 작성한 서비스 정책, 유저 스토리를 클로드 코드에서 넣어서 검토하고 보완해서
+   작성하는 워크플로우 실행 중
+   1. 이 단계에서는 특별한 원칙이나 룰을 따로 만들어두고 있진 않음
+   2. 유저스토리 기반으로 HTML 프로토타이핑 정도 하고 있음
+3. 두개다 별도 폴더(프로젝트)로 진행 중
+
+[원하는 방향]
+1. 꾸그 서비스에 대한 전반적인 내용을 사전에 구성해놓고 서비스, 데이터 업데이트를 통해
+   지속적으로 내용을 업데이트 하고 싶음
+2. 데이터 현황 분석을 통해 큰 서비스 제품 전략과 비즈니스 전략을 도출하고자 함
+3. 비즈니스 전략, 제품 전략과 데이터 분석 내용, 인터뷰 및 고객 관찰 내용을 기반으로
+   기회 리스트를 뽑고자 함
+   1. 내가 창의적인 기회리스트 도출에 부족한 점이 많아서 아이디어를 창발하는데 도움받고 싶음
+   2. 필요한 경우 프로토타이핑을 여러개 만들면서 효과적인 기회리스트를 검토하고 싶음
+4. 기회리스트와 데이터 분석내용을 기반으로 PRD를 작성하고 싶어.
+   1. 기존 데이터 분석 결과와 고객 관찰결과, 제품 전략을 기반으로 진행배경, 목표지표 설정
+   2. 기회리스트 내용 기반으로 서비스 정책, 유저스토리, 스펙리스트, 상세 요구사항 도출
+5. 기회리스트를 배포하고 그 결과를 다시 데이터분석을 통해 분석
+6. 클로드의 아티팩트나 클로드 코드의 서브에이전트, 스킬 같은 도구들을 적극적으로 활용하고 싶음
+
+이런 워크플로우를 만들어서 진행한다고 할때 어디서부터 어디까지 세팅하고, 어떤 도구들을
+사용해야할지 모르겟어.
+
+더 확인하고 싶은 사항이 있다면 질문해줘
+                    </div>
+                </div>
+            </div>
+            <div class="page-number">11 / 16</div>
+        </div>
+
+        <!-- 슬라이드 12: 내가 짠 워크플로우 - 상세 인터랙티브 버전 -->
+        <div class="slide content" id="slide12" style="padding: 35px 50px;">
+            <h2 style="margin-bottom: 10px; font-size: 1.9rem;">내가 짠 워크플로우: 스킬 + 에이전트 협업</h2>
+            <p style="color: #718096; margin-bottom: 15px; font-size: 0.9rem;">각 단계를 클릭하면 사용되는 스킬과 에이전트를 확인할 수 있습니다</p>
+
+            <!-- 메인 워크플로우 다이어그램 -->
+            <div class="workflow-diagram" style="padding: 20px; margin: 10px 0;">
+                <div class="workflow-steps" style="gap: 8px;">
+                    <div class="workflow-step highlight clickable-step" style="padding: 10px 16px; font-size: 0.8rem;" onclick="openModal('stage-analysis')">
+                        <div style="font-weight: 700;">1. 분석</div>
+                        <div style="font-size: 0.7rem; opacity: 0.9;">data-analysis</div>
+                    </div>
+                    <div class="workflow-arrow" style="font-size: 1.2rem;">→</div>
+                    <div class="workflow-step highlight clickable-step" style="padding: 10px 16px; font-size: 0.8rem;" onclick="openModal('stage-proposal')">
+                        <div style="font-weight: 700;">2. 전략/제안</div>
+                        <div style="font-size: 0.7rem; opacity: 0.9;">proposal</div>
+                    </div>
+                    <div class="workflow-arrow" style="font-size: 1.2rem;">→</div>
+                    <div class="workflow-step highlight clickable-step" style="padding: 10px 16px; font-size: 0.8rem;" onclick="openModal('stage-prd')">
+                        <div style="font-weight: 700;">3. 기획</div>
+                        <div style="font-size: 0.7rem; opacity: 0.9;">prd</div>
+                    </div>
+                    <div class="workflow-arrow" style="font-size: 1.2rem;">→</div>
+                    <div class="workflow-step highlight clickable-step" style="padding: 10px 16px; font-size: 0.8rem;" onclick="openModal('stage-prototype')">
+                        <div style="font-weight: 700;">4. 프로토타입</div>
+                        <div style="font-size: 0.7rem; opacity: 0.9;">ux-ui</div>
+                    </div>
+                    <div class="workflow-arrow" style="font-size: 1.2rem;">→</div>
+                    <div class="workflow-step clickable-step" style="padding: 10px 16px; font-size: 0.8rem; background: #d1fae5; color: #065f46; border: 2px solid #10b981;" onclick="openModal('stage-publish')">
+                        <div style="font-weight: 700;">5. 발행</div>
+                        <div style="font-size: 0.7rem;">notion-archive</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 인터랙티브 카드 그리드 -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px;">
+                <!-- 분석 단계 카드 -->
+                <div class="interactive-card" onclick="toggleCard(this)">
+                    <div class="card-header">
+                        <h4>1. 분석 단계</h4>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="card-preview">data-analysis + data-analyst + validation</div>
+                    <div class="card-content">
+                        <div style="font-size: 0.8rem; color: #4a5568; line-height: 1.7;">
+                            <div style="padding: 6px 10px; background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%); border-radius: 6px; margin-bottom: 6px; color: white;">
+                                <strong>스킬</strong>: data-analysis (4가지 모드)
+                            </div>
+                            <div style="padding: 6px 10px; background: #e2e8f0; border-radius: 6px; margin-bottom: 6px;">
+                                <strong>에이전트</strong>:
+                                <span style="background: #2563eb; color: white; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem;">pm-orchestrator</span>
+                                <span style="background: #4285f4; color: white; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem;">data-analyst</span>
+                            </div>
+                            <div style="padding: 6px 10px; background: #c6f6d5; border-radius: 6px;">
+                                <strong>자동 검증</strong>: validation 스킬
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 전략/제안 단계 카드 -->
+                <div class="interactive-card" onclick="toggleCard(this)">
+                    <div class="card-header">
+                        <h4>2. 전략/제안 단계</h4>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="card-preview">proposal + 7개 관점 에이전트 병렬 검토</div>
+                    <div class="card-content">
+                        <div style="font-size: 0.8rem; color: #4a5568; line-height: 1.7;">
+                            <div style="padding: 6px 10px; background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%); border-radius: 6px; margin-bottom: 6px; color: white;">
+                                <strong>스킬</strong>: proposal (전략 + 기회 발굴)
+                            </div>
+                            <div style="padding: 6px 10px; background: #fed7d7; border-radius: 6px; margin-bottom: 6px;">
+                                <strong>7개 관점 에이전트 (병렬)</strong>:<br>
+                                <span style="font-size: 0.7rem;">
+                                    <span style="background: #ff6b35; color: white; padding: 1px 5px; border-radius: 3px;">parent</span>
+                                    <span style="background: #4285f4; color: white; padding: 1px 5px; border-radius: 3px;">tech</span>
+                                    <span style="background: #48bb78; color: white; padding: 1px 5px; border-radius: 3px;">market</span>
+                                    <span style="background: #3b82f6; color: white; padding: 1px 5px; border-radius: 3px;">business</span>
+                                    <span style="background: #ed8936; color: white; padding: 1px 5px; border-radius: 3px;">marketing</span>
+                                    <span style="background: #718096; color: white; padding: 1px 5px; border-radius: 3px;">legal</span>
+                                    <span style="background: #1a1a2e; color: white; padding: 1px 5px; border-radius: 3px;">clevel</span>
+                                </span>
+                            </div>
+                            <div style="padding: 6px 10px; background: #fef3c7; border-radius: 6px;">
+                                <strong>품질 검토</strong>:
+                                <span style="background: #c53030; color: white; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem;">critic</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 기획 단계 카드 -->
+                <div class="interactive-card" onclick="toggleCard(this)">
+                    <div class="card-header">
+                        <h4>3. 기획 단계</h4>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="card-preview">prd + user-story + requirements</div>
+                    <div class="card-content">
+                        <div style="font-size: 0.8rem; color: #4a5568; line-height: 1.7;">
+                            <div style="padding: 6px 10px; background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%); border-radius: 6px; margin-bottom: 6px; color: white;">
+                                <strong>스킬</strong>: prd → user-story → requirements
+                            </div>
+                            <div style="padding: 6px 10px; background: #fed7d7; border-radius: 6px; margin-bottom: 6px;">
+                                <strong>7개 관점 에이전트</strong>: PRD 검토 시 병렬 호출
+                            </div>
+                            <div style="padding: 6px 10px; background: #fef3c7; border-radius: 6px;">
+                                <strong>품질 검토</strong>:
+                                <span style="background: #c53030; color: white; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem;">critic</span>
+                                <span style="background: #2b6cb0; color: white; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem;">editor</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 프로토타입 & 발행 단계 카드 -->
+                <div class="interactive-card" onclick="toggleCard(this)">
+                    <div class="card-header">
+                        <h4>4-5. 프로토타입 & 발행</h4>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="card-preview">ux-ui + html-report + notion-archive</div>
+                    <div class="card-content">
+                        <div style="font-size: 0.8rem; color: #4a5568; line-height: 1.7;">
+                            <div style="padding: 6px 10px; background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%); border-radius: 6px; margin-bottom: 6px; color: white;">
+                                <strong>프로토타입</strong>: ux-ui (HTML 플로우차트, 프로토타입)
+                            </div>
+                            <div style="padding: 6px 10px; background: #fef3c7; border-radius: 6px; margin-bottom: 6px;">
+                                <strong>보고서</strong>: html-report (시각화 보고서)
+                            </div>
+                            <div style="padding: 6px 10px; background: #d1fae5; border-radius: 6px;">
+                                <strong>발행</strong>: notion-archive +
+                                <span style="background: #2b6cb0; color: white; padding: 1px 6px; border-radius: 4px; font-size: 0.7rem;">editor</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 핵심 요약 -->
+            <div class="tip-box" style="padding: 10px 20px; margin-top: 10px;">
+                <h4 style="font-size: 0.9rem; margin-bottom: 3px;">핵심: pm-orchestrator가 모든 요청을 먼저 받아 워크플로우 설계</h4>
+                <p style="font-size: 0.8rem; margin: 0;">업무 성격 파악 → 필요 스킬 조합 → 단계별 승인 관리 → 품질 검토 자동화</p>
+            </div>
+            <div class="page-number">12 / 17</div>
+        </div>
+
+        <!-- 슬라이드 13: 제안서 작성 실제 화면 -->
+        <div class="slide content" id="slide13" style="padding: 40px 60px;">
+            <h2 style="margin-bottom: 10px;">실제로 이렇게 제안서를 작성해요</h2>
+            <p style="color: #718096; margin-bottom: 15px; font-size: 0.95rem;">좌우 버튼/A·D 키로 탐색 | <strong>이미지 클릭 시 확대</strong> | ESC로 닫기</p>
+
+            <!-- 이미지 갤러리 2 -->
+            <div style="position: relative; background: #1e3a5f; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                <!-- 이미지 컨테이너 -->
+                <div style="position: relative; display: flex; justify-content: center; align-items: center; min-height: 420px;">
+                    <img id="gallery2Image" src="proposal-images/01.png" alt="제안서 작성 화면" onclick="openImageZoom2()" style="max-width: 100%; max-height: 420px; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.3); cursor: zoom-in; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+
+                <!-- 네비게이션 버튼 -->
+                <button onclick="prevGallery2Image()" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); color: #1e3a5f; font-size: 1.5rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.2s;" onmouseover="this.style.background='white'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='translateY(-50%)'">◀</button>
+                <button onclick="nextGallery2Image()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); color: #1e3a5f; font-size: 1.5rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.2s;" onmouseover="this.style.background='white'; this.style.transform='translateY(-50%) scale(1.1)'" onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='translateY(-50%)'">▶</button>
+
+                <!-- 이미지 카운터 -->
+                <div style="text-align: center; margin-top: 15px;">
+                    <span id="gallery2Counter" style="background: rgba(255,255,255,0.15); color: white; padding: 8px 20px; border-radius: 20px; font-size: 0.95rem;">1 / 7</span>
+                </div>
+
+                <!-- 썸네일 인디케이터 -->
+                <div style="display: flex; justify-content: center; gap: 8px; margin-top: 12px;">
+                    <span class="gallery2-dot active" onclick="goToGallery2Image(1)" style="width: 10px; height: 10px; border-radius: 50%; background: white; cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery2-dot" onclick="goToGallery2Image(2)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery2-dot" onclick="goToGallery2Image(3)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery2-dot" onclick="goToGallery2Image(4)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery2-dot" onclick="goToGallery2Image(5)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery2-dot" onclick="goToGallery2Image(6)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                    <span class="gallery2-dot" onclick="goToGallery2Image(7)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: all 0.2s;"></span>
+                </div>
+            </div>
+
+            <!-- 예시 버튼들 -->
+            <div style="display: flex; justify-content: center; gap: 20px; margin-top: 15px;">
+                <a href="example-proposal.html" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(139,92,246,0.3); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(139,92,246,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(139,92,246,0.3)'">
+                    📋 제안서 예시 보기
+                </a>
+                <a href="teacher-prototype.html" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(245,158,11,0.3); transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(245,158,11,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(245,158,11,0.3)'">
+                    🎨 프로토타입 예시 보기
+                </a>
+            </div>
+
+            <div class="page-number">13 / 17</div>
+        </div>
+
+        <!-- 슬라이드 14: 결론 2 -->
+        <div class="slide content" id="slide14">
+            <div class="highlight-card" style="margin-top: 100px;">
+                <h2 style="font-size: 2.5rem;">이제는 더 빠르고 쉽게<br>일관된 결과물을 만들고 있어요</h2>
+                <p style="margin-top: 20px;">초안 작성의 부담 감소, 빠진 항목 없는 체계적 문서<br>시각적 프로토타입으로 더 명확한 커뮤니케이션</p>
+            </div>
+            <div class="page-number">14 / 17</div>
+        </div>
+
+        <!-- 슬라이드 15: 공유 -->
+        <div class="slide content" id="slide15">
+            <h2>저만 할 수 있는 게 아닙니다</h2>
+
+            <div class="ending-points" style="gap: 20px; margin: 25px 0;">
+                <!-- 1. 데이터 분석 세팅 공유 -->
+                <div class="ending-point" style="background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%); flex-direction: column; align-items: flex-start;">
+                    <div style="display: flex; align-items: flex-start; gap: 15px; width: 100%;">
+                        <div class="number" style="background: #2563eb;">1</div>
+                        <div class="content" style="flex: 1;">
+                            <h4 style="color: #2b6cb0; font-size: 1.4rem;">데이터 분석 세팅을 공유드릴게요</h4>
+                            <p style="color: #2c5282; font-size: 1.1rem;">폴더에 카피만 하면 저랑 동일하게 분석할 수 있어요</p>
+                            <div style="margin-top: 12px; padding: 12px 15px; background: rgba(255,255,255,0.7); border-radius: 10px; border-left: 4px solid #4299e1;">
+                                <p style="color: #2c5282; font-size: 0.95rem; margin: 0;">
+                                    <strong>준비물:</strong> 클로드 코드 세팅 + MCP 연결<br>
+                                    <span style="font-size: 0.85rem; color: #4a5568;">(별도 세팅 방법 공유 예정)</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div style="flex: 0.9;">
+                            <img src="data-analysis-skill-structure.png" alt="데이터 분석 스킬 구조" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 워크플로우 빌더 스킬 공유 -->
+                <div class="ending-point" style="background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);">
+                    <div class="number" style="background: #1e3a5f;">2</div>
+                    <div class="content">
+                        <h4 style="color: #276749; font-size: 1.4rem;">워크플로우 빌더 스킬도 공유드릴게요</h4>
+                        <p style="color: #22543d; font-size: 1.1rem;">질문에 답하기만 하면 워크플로우가 생겨납니다!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="page-number">15 / 17</div>
+        </div>
+
+        <!-- 슬라이드 16: 워크플로우 빌더 상세 프로세스 -->
+        <div class="slide content" id="slide16">
+            <h2>워크플로우 빌더는 이렇게 작동해요</h2>
+            <p style="text-align: center; color: #64748b; margin-bottom: 25px;">각 Phase를 클릭하면 상세 내용을 볼 수 있어요</p>
+
+            <!-- 전체 흐름 - 클릭 가능 -->
+            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap;">
+                <div class="workflow-phase" onclick="openModal('wf-phase1')" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); padding: 15px 22px; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 12px rgba(59,130,246,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                    <div style="font-size: 0.75rem; color: #3b82f6; font-weight: 600;">Phase 1</div>
+                    <div style="font-weight: 700; color: #1e40af; font-size: 1.1rem;">Discovery</div>
+                    <div style="font-size: 0.8rem; color: #3b82f6;">직무/목적 파악</div>
+                </div>
+                <div style="display: flex; align-items: center; color: #94a3b8; font-size: 1.2rem;">→</div>
+                <div class="workflow-phase" onclick="openModal('wf-phase2')" style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); padding: 15px 22px; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 12px rgba(34,197,94,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                    <div style="font-size: 0.75rem; color: #22c55e; font-weight: 600;">Phase 2</div>
+                    <div style="font-weight: 700; color: #166534; font-size: 1.1rem;">Design</div>
+                    <div style="font-size: 0.8rem; color: #22c55e;">구조 설계</div>
+                </div>
+                <div style="display: flex; align-items: center; color: #94a3b8; font-size: 1.2rem;">→</div>
+                <div class="workflow-phase" onclick="openModal('wf-phase3')" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 15px 22px; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 12px rgba(245,158,11,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                    <div style="font-size: 0.75rem; color: #f59e0b; font-weight: 600;">Phase 3</div>
+                    <div style="font-weight: 700; color: #92400e; font-size: 1.1rem;">Review</div>
+                    <div style="font-size: 0.8rem; color: #f59e0b;">사용자 확인</div>
+                </div>
+                <div style="display: flex; align-items: center; color: #94a3b8; font-size: 1.2rem;">→</div>
+                <div class="workflow-phase" onclick="openModal('wf-phase4')" style="background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%); padding: 15px 22px; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 12px rgba(168,85,247,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                    <div style="font-size: 0.75rem; color: #a855f7; font-weight: 600;">Phase 4</div>
+                    <div style="font-weight: 700; color: #6b21a8; font-size: 1.1rem;">Generation</div>
+                    <div style="font-size: 0.8rem; color: #a855f7;">스킬 생성</div>
+                </div>
+                <div style="display: flex; align-items: center; color: #94a3b8; font-size: 1.2rem;">→</div>
+                <div class="workflow-phase" onclick="openModal('wf-phase5')" style="background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); padding: 15px 22px; border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 12px rgba(236,72,153,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">
+                    <div style="font-size: 0.75rem; color: #ec4899; font-weight: 600;">Phase 5</div>
+                    <div style="font-weight: 700; color: #9d174d; font-size: 1.1rem;">Validation</div>
+                    <div style="font-size: 0.8rem; color: #ec4899;">테스트</div>
+                </div>
+            </div>
+
+            <!-- 5개 Phase 요약 카드 -->
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+                <!-- Phase 1 -->
+                <div onclick="openModal('wf-phase1')" style="background: white; border-radius: 10px; padding: 18px 15px; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#3b82f6'; this.style.boxShadow='0 4px 12px rgba(59,130,246,0.15)'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                    <div style="font-size: 1.5rem; margin-bottom: 8px;">🎯</div>
+                    <div style="font-weight: 700; color: #1e40af; font-size: 0.95rem; margin-bottom: 6px;">Discovery</div>
+                    <div style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">6가지 질문으로<br>업무 프로세스 파악</div>
+                </div>
+                <!-- Phase 2 -->
+                <div onclick="openModal('wf-phase2')" style="background: white; border-radius: 10px; padding: 18px 15px; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#22c55e'; this.style.boxShadow='0 4px 12px rgba(34,197,94,0.15)'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                    <div style="font-size: 1.5rem; margin-bottom: 8px;">🏗️</div>
+                    <div style="font-weight: 700; color: #166534; font-size: 0.95rem; margin-bottom: 6px;">Design</div>
+                    <div style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">스킬/에이전트<br>구조 설계</div>
+                </div>
+                <!-- Phase 3 -->
+                <div onclick="openModal('wf-phase3')" style="background: white; border-radius: 10px; padding: 18px 15px; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#f59e0b'; this.style.boxShadow='0 4px 12px rgba(245,158,11,0.15)'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                    <div style="font-size: 1.5rem; margin-bottom: 8px;">👀</div>
+                    <div style="font-weight: 700; color: #92400e; font-size: 0.95rem; margin-bottom: 6px;">Review</div>
+                    <div style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">설계 결과<br>사용자 확인</div>
+                </div>
+                <!-- Phase 4 -->
+                <div onclick="openModal('wf-phase4')" style="background: white; border-radius: 10px; padding: 18px 15px; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#a855f7'; this.style.boxShadow='0 4px 12px rgba(168,85,247,0.15)'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                    <div style="font-size: 1.5rem; margin-bottom: 8px;">⚙️</div>
+                    <div style="font-weight: 700; color: #6b21a8; font-size: 0.95rem; margin-bottom: 6px;">Generation</div>
+                    <div style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">스킬/에이전트<br>자동 생성</div>
+                </div>
+                <!-- Phase 5 -->
+                <div onclick="openModal('wf-phase5')" style="background: white; border-radius: 10px; padding: 18px 15px; border: 1px solid #e2e8f0; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#ec4899'; this.style.boxShadow='0 4px 12px rgba(236,72,153,0.15)'" onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
+                    <div style="font-size: 1.5rem; margin-bottom: 8px;">✅</div>
+                    <div style="font-weight: 700; color: #9d174d; font-size: 0.95rem; margin-bottom: 6px;">Validation</div>
+                    <div style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">테스트 및<br>개선</div>
+                </div>
+            </div>
+
+            <!-- 핵심 포인트 -->
+            <div style="margin-top: 25px; padding: 15px 20px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 10px; border: 1px solid #86efac;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.3rem;">💡</span>
+                    <span style="color: #166534; font-weight: 600;">핵심:</span>
+                    <span style="color: #15803d;">질문에 대답만 하면 → 워크플로우가 자동으로 생성됩니다!</span>
+                </div>
+            </div>
+
+            <div class="page-number">16 / 17</div>
+        </div>
+
+        <!-- 슬라이드 17: 마무리 -->
+        <div class="slide content" id="slide17">
+            <h2>AI를 활용하면서 느끼는 것들</h2>
+
+            <div class="ending-points">
+                <div class="ending-point">
+                    <div class="number">1</div>
+                    <div class="content">
+                        <h4>먼저 물어보세요</h4>
+                        <p>물어보면 더 빨리 해결책을 찾을 수 있어요</p>
+                    </div>
+                </div>
+                <div class="ending-point">
+                    <div class="number">2</div>
+                    <div class="content">
+                        <h4>한번에 될 거라고 생각하지 마세요</h4>
+                        <p>딸깍은 없습니다. 원하는 결과물을 만들기 위해 계속 조련해야합니다. 조련하다보면 더 빨라질거에요.</p>
+                    </div>
+                </div>
+                <div class="ending-point">
+                    <div class="number">3</div>
+                    <div class="content">
+                        <h4>문제를 해결하는데 AI를 쓰세요</h4>
+                        <p>할 수 있을 것 같은 일에 쓰지 마세요</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote" style="margin-top: 30px; font-size: 1.5rem;">
+                감사합니다
+            </div>
+            <div class="page-number">17 / 17</div>
+        </div>
+    </div>
+
+    <!-- 모달 오버레이 -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- 이미지 확대 오버레이 -->
+    <div id="imageZoomOverlay" onclick="closeAllZoom()" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; cursor: zoom-out;">
+        <img id="zoomedImage" src="" alt="확대 이미지" style="max-width: 95%; max-height: 95%; border-radius: 8px; box-shadow: 0 4px 30px rgba(0,0,0,0.5);">
+        <button onclick="closeAllZoom()" style="position: absolute; top: 20px; right: 30px; width: 50px; height: 50px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); color: #1a1a2e; font-size: 1.8rem; cursor: pointer; font-weight: bold;">&times;</button>
+        <!-- 확대 뷰에서도 네비게이션 -->
+        <button onclick="event.stopPropagation(); zoomPrevImage();" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); width: 60px; height: 60px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); color: #1a1a2e; font-size: 1.8rem; cursor: pointer;">◀</button>
+        <button onclick="event.stopPropagation(); zoomNextImage();" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 60px; height: 60px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); color: #1a1a2e; font-size: 1.8rem; cursor: pointer;">▶</button>
+        <div style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.15); color: white; padding: 10px 25px; border-radius: 25px; font-size: 1rem;">
+            <span id="zoomCounter">1 / 10</span> · A/D 키로 탐색 · ESC로 닫기
+        </div>
+    </div>
+
+    <!-- 네비게이션 -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()">←</button>
+        <span class="slide-counter"><span id="currentSlide">1</span> / 17</span>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">→</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 17;
+
+        // 모달 컨텐츠 정의
+        const modalContents = {
+            // 데이터 분석 워크플로우 모달
+            'request': {
+                title: '1. 데이터 요청 - 모드 자동 분류',
+                content: `
+                    <ul class="detail-list">
+                        <li><span class="badge" style="background: #e2e8f0; color: #4a5568;">ad-hoc</span> "파악해줘", "확인해줘", "얼마야" → 간단한 수치 확인</li>
+                        <li><span class="badge" style="background: #fed7d7; color: #c53030;">diagnostic</span> "심층 분석", "왜", "원인" → 체계적 진단 리포트</li>
+                        <li><span class="badge" style="background: #fef3c7; color: #92400e;">hypothesis</span> "검증해줘", "맞는지" → 가설 검증, 통계적 유의성</li>
+                        <li><span class="badge" style="background: #c6f6d5; color: #276749;">performance</span> "배포 결과", "성과" → 배포/실험 성과 측정</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #718096; font-size: 0.9rem;">
+                        요청 키워드를 분석하여 적절한 모드를 자동으로 선택합니다.
+                    </p>
+                `
+            },
+            'knowledge': {
+                title: '2. 지식베이스 탐색',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;">분석에 필요한 5개 핵심 문서를 참조합니다:</p>
+                    <ul class="detail-list">
+                        <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">database_schema_reference.md</code><br>BigQuery 테이블, 필드, 관계 정의</li>
+                        <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">amplitude-events.md</code><br>이벤트명, 프로퍼티, 수집 조건</li>
+                        <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">metrics-definition.md</code><br>지표 정의, 계산식, 기준</li>
+                        <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">tableau-dashboards.md</code><br>기존 대시보드, 기준 데이터</li>
+                        <li><code style="background: #edf2f7; padding: 2px 8px; border-radius: 4px;">user-segments.md</code><br>유저 세그먼트 정의</li>
+                    </ul>
+                `
+            },
+            'plan': {
+                title: '3. 분석 계획 수립',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;">분석 계획서에 포함되는 항목:</p>
+                    <ul class="detail-list">
+                        <li><strong>분석 맥락</strong> - 목적, 핵심 질문, 가설, 의사결정</li>
+                        <li><strong>분석 범위</strong> - 기간, 대상, 제외 조건</li>
+                        <li><strong>데이터소스 상세</strong> - 테이블, 필드, 선택 이유, 출처</li>
+                        <li><strong>지표 정의</strong> - 지표명, 정의, 산식</li>
+                        <li><strong>분석 단계</strong> - Phase별 실행 계획</li>
+                        <li><strong>필터 조건</strong> - 테스트 계정 제외 등</li>
+                    </ul>
+                `
+            },
+            'validate': {
+                title: '4. 계획 검증 (4단계 자동 점검)',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;">사람에게 공유하기 전 자동으로 4단계 검증:</p>
+                    <ul class="detail-list">
+                        <li><span class="badge" style="background: #2563eb; color: white;">1</span> <strong>Knowledge Base 검증</strong><br>테이블/필드 존재 여부 확인</li>
+                        <li><span class="badge" style="background: #2563eb; color: white;">2</span> <strong>Amplitude 검증</strong><br>이벤트/프로퍼티 실제 존재 확인</li>
+                        <li><span class="badge" style="background: #2563eb; color: white;">3</span> <strong>Tableau 검증</strong><br>기준선 참고 데이터 확보</li>
+                        <li><span class="badge" style="background: #2563eb; color: white;">4</span> <strong>data-analyst 검토</strong><br>쿼리 로직, 필터 조건, JOIN 정합성 검토</li>
+                    </ul>
+                `
+            },
+            'approve': {
+                title: '5. 승인 요청',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;">핵심 원칙: <strong>사람의 승인 없이 분석 실행 금지</strong></p>
+                    <ul class="detail-list">
+                        <li>계획서를 사용자에게 공유</li>
+                        <li>"이대로 진행할까요?" 승인 요청</li>
+                        <li>승인 상태 파일로 관리 (PENDING → APPROVED)</li>
+                        <li>컨텍스트가 끊겨도 승인 상태 유지</li>
+                    </ul>
+                    <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #92400e;">왜 중요한가?</strong>
+                        <p style="color: #78350f; margin-top: 5px; font-size: 0.9rem;">잘못된 분석은 잘못된 의사결정으로 이어집니다. 계획 단계에서 검토하면 실행 후 수정보다 비용이 적습니다.</p>
+                    </div>
+                `
+            },
+            'execute': {
+                title: '6. 분석 실행 (MCP 도구)',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;">3가지 데이터소스를 MCP로 직접 연결:</p>
+                    <ul class="detail-list">
+                        <li><span class="badge blue">BigQuery</span><br>
+                            <code>execute_sql</code> - SQL 쿼리 실행<br>
+                            <code>get_table_info</code> - 테이블 정보 조회<br>
+                            <code>search_catalog</code> - 테이블 검색
+                        </li>
+                        <li><span class="badge orange">Amplitude</span><br>
+                            <code>query_dataset</code> - 데이터셋 조회<br>
+                            <code>query_charts</code> - 차트 데이터 조회<br>
+                            <code>search</code> - 이벤트/속성 검색
+                        </li>
+                        <li><span class="badge" style="background: #e97627; color: white;">Tableau</span><br>
+                            <code>get-view-data</code> - 뷰 데이터 조회<br>
+                            <code>query-datasource</code> - 소스 쿼리
+                        </li>
+                    </ul>
+                `
+            },
+            'result': {
+                title: '7. 결과 검증',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;">분석 완료 후 자동 검증:</p>
+                    <ul class="detail-list">
+                        <li><strong>기준 유지 검증</strong><br>쿼리에 분석 기준(기간, 범위, 계산 기준)이 적용되었는지</li>
+                        <li><strong>정확도 검증</strong><br>기준선 대비 오차 ±5% 이내인지</li>
+                        <li><strong>정합성 검증</strong><br>세부 합계 = 전체인지</li>
+                        <li><strong>교차 검증</strong><br>BigQuery vs Amplitude vs Tableau 결과 비교</li>
+                    </ul>
+                    <div style="background: #d1fae5; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <strong style="color: #065f46;">검증 실패 시</strong>
+                        <p style="color: #047857; margin-top: 5px; font-size: 0.9rem;">원인 분석 후 재실행하거나 사용자에게 보고합니다.</p>
+                    </div>
+                `
+            },
+            // PM 워크플로우 스킬 모달
+            'skill-analysis': {
+                title: 'data-analysis 스킬',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;"><strong>핵심 질문:</strong> 데이터로 확인하면?</p>
+                    <ul class="detail-list">
+                        <li><strong>4가지 모드</strong><br>ad-hoc, diagnostic, hypothesis, performance</li>
+                        <li><strong>산출물</strong><br>분석 리포트 (-plan.md, -result.md, -queries.md)</li>
+                        <li><strong>저장 위치</strong><br>01-data-analysis/outputs/</li>
+                        <li><strong>자동 검증</strong><br>validation 스킬로 계획/결과 검증</li>
+                    </ul>
+                `
+            },
+            'skill-proposal': {
+                title: 'proposal 스킬',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;"><strong>핵심 질문:</strong> 어떤 방향? + 뭘 할까?</p>
+                    <ul class="detail-list">
+                        <li><strong>목적</strong><br>전략 수립 (Where to play / How to win) + 기회 발굴 + 제안서</li>
+                        <li><strong>산출물</strong><br>제안서 (-draft.md, -final.md)</li>
+                        <li><strong>저장 위치</strong><br>02-proposals/outputs/</li>
+                        <li><strong>병렬 검토</strong><br>7개 에이전트 다관점 리스크 검토</li>
+                    </ul>
+                `
+            },
+            'skill-prd': {
+                title: 'prd 스킬',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;"><strong>핵심 질문:</strong> 어떻게 만들까?</p>
+                    <ul class="detail-list">
+                        <li><strong>목적</strong><br>제안서 기회를 상세 기획 문서로 구체화</li>
+                        <li><strong>산출물</strong><br>PRD (-draft.md, -final.md)</li>
+                        <li><strong>저장 위치</strong><br>03-prds/outputs/</li>
+                        <li><strong>후속 스킬</strong><br>ux-ui, user-story, requirements</li>
+                    </ul>
+                `
+            },
+            'skill-uxui': {
+                title: 'ux-ui 스킬',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;"><strong>핵심 질문:</strong> 사용자 흐름은?</p>
+                    <ul class="detail-list">
+                        <li><strong>목적</strong><br>UX/UI 산출물 생성</li>
+                        <li><strong>산출물</strong><br>HTML 유저플로우, HTML 프로토타입, 와이어프레임</li>
+                        <li><strong>저장 위치</strong><br>05-prototype/outputs/</li>
+                        <li><strong>코드베이스 참조</strong><br>gguge-uncle-web, teacher-gguge-front</li>
+                    </ul>
+                `
+            },
+            'skill-userstory': {
+                title: 'user-story 스킬',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;"><strong>핵심 질문:</strong> 유저가 원하는 건?</p>
+                    <ul class="detail-list">
+                        <li><strong>목적</strong><br>PRD에 유저스토리와 정책 추가</li>
+                        <li><strong>트리거</strong><br>"유저스토리", "정책", "AC", "시나리오"</li>
+                        <li><strong>산출물</strong><br>PRD 문서에 유저스토리/정책 섹션 추가</li>
+                        <li><strong>참조</strong><br>user-story-policy-reference.md</li>
+                    </ul>
+                `
+            },
+            'skill-requirements': {
+                title: 'requirements 스킬',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;"><strong>핵심 질문:</strong> 상세 요구사항은?</p>
+                    <ul class="detail-list">
+                        <li><strong>목적</strong><br>PRD에 상세 요구사항 추가</li>
+                        <li><strong>트리거</strong><br>"상세 요구사항", "화면별 스펙", "API 스펙"</li>
+                        <li><strong>산출물</strong><br>PRD 문서에 화면별/API 스펙 추가</li>
+                        <li><strong>참조</strong><br>requirements-reference.md</li>
+                    </ul>
+                `
+            },
+            'skill-report': {
+                title: 'html-report 스킬',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;"><strong>핵심 질문:</strong> 결과를 어떻게 전달할까?</p>
+                    <ul class="detail-list">
+                        <li><strong>목적</strong><br>분석 결과를 HTML/PDF 보고서로 변환</li>
+                        <li><strong>트리거</strong><br>"HTML 보고서", "리포트 생성", "시각화 정리"</li>
+                        <li><strong>산출물</strong><br>-report.html, -report.md, -report.pdf</li>
+                        <li><strong>스크립트</strong><br>html_to_markdown.py, html_to_pdf.js</li>
+                    </ul>
+                `
+            },
+            'skill-notion': {
+                title: 'notion-archive 스킬',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;"><strong>핵심 질문:</strong> 발행하기</p>
+                    <ul class="detail-list">
+                        <li><strong>목적</strong><br>완성된 문서를 노션 DB에 발행</li>
+                        <li><strong>트리거</strong><br>"노션에 발행", "아카이빙", "팀에 공유"</li>
+                        <li><strong>산출물</strong><br>노션 페이지</li>
+                        <li><strong>스테이지 매핑</strong><br>진단 → 제안서 → PRD → 성과분석</li>
+                    </ul>
+                `
+            },
+            // PM 워크플로우 단계별 상세 모달
+            'stage-analysis': {
+                title: '1단계: 분석 (data-analysis)',
+                content: `
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">사용되는 스킬</h4>
+                        <ul class="detail-list">
+                            <li><span class="badge" style="background: #2563eb; color: white;">data-analysis</span> 4가지 모드 (ad-hoc, diagnostic, hypothesis, performance)</li>
+                            <li><span class="badge green">validation</span> 계획/결과 자동 검증</li>
+                        </ul>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #4285f4; margin-bottom: 10px;">참여하는 에이전트</h4>
+                        <ul class="detail-list">
+                            <li><span class="badge" style="background: #2563eb; color: white;">pm-orchestrator</span> 요청 분석, 모드 결정, 워크플로우 설계</li>
+                            <li><span class="badge blue">data-analyst</span> 분석 계획 검토, 쿼리 로직 검증</li>
+                        </ul>
+                    </div>
+                    <div style="background: #e2e8f0; padding: 12px; border-radius: 8px;">
+                        <strong>산출물:</strong> 분석 리포트 (-plan.md, -result.md, -queries.md)
+                    </div>
+                `
+            },
+            'stage-proposal': {
+                title: '2단계: 전략/제안 (proposal)',
+                content: `
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">사용되는 스킬</h4>
+                        <ul class="detail-list">
+                            <li><span class="badge" style="background: #2563eb; color: white;">proposal</span> Where to play / How to win 전략 수립 + 기회 발굴 + 제안서 작성</li>
+                        </ul>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #4285f4; margin-bottom: 10px;">참여하는 에이전트 (8개)</h4>
+                        <ul class="detail-list">
+                            <li><span class="badge" style="background: #2563eb; color: white;">pm-orchestrator</span> 전체 조율</li>
+                            <li><span class="badge orange">parent-agent</span> 학부모(고객) 관점 검토</li>
+                            <li><span class="badge blue">tech-agent</span> 기술 구현 가능성</li>
+                            <li><span class="badge green">market-agent</span> 시장/경쟁 분석</li>
+                            <li><span class="badge" style="background: #3b82f6; color: white;">business-agent</span> 비즈니스 임팩트</li>
+                            <li><span class="badge" style="background: #ed8936; color: white;">marketing-agent</span> 마케팅 포지셔닝</li>
+                            <li><span class="badge" style="background: #718096; color: white;">legal-agent</span> 법적 리스크</li>
+                            <li><span class="badge" style="background: #1a1a2e; color: white;">clevel-agent</span> 전사 전략 정합성</li>
+                        </ul>
+                    </div>
+                    <div style="background: #fed7d7; padding: 12px; border-radius: 8px;">
+                        <strong>품질 검토:</strong> <span class="badge" style="background: #c53030; color: white;">critic</span> 비판적 검토
+                    </div>
+                `
+            },
+            'stage-prd': {
+                title: '3단계: 기획 (prd + user-story + requirements)',
+                content: `
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">사용되는 스킬 (순차)</h4>
+                        <ul class="detail-list">
+                            <li><span class="badge" style="background: #2563eb; color: white;">prd</span> 기획서 작성 (7개 섹션)</li>
+                            <li><span class="badge" style="background: #2563eb; color: white;">user-story</span> 유저스토리/정책 추가</li>
+                            <li><span class="badge" style="background: #2563eb; color: white;">requirements</span> 상세 요구사항 추가</li>
+                        </ul>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #4285f4; margin-bottom: 10px;">참여하는 에이전트</h4>
+                        <ul class="detail-list">
+                            <li><span class="badge" style="background: #2563eb; color: white;">pm-orchestrator</span> PRD 작성 조율</li>
+                            <li>7개 관점 에이전트: PRD 초안 완료 후 병렬 검토</li>
+                        </ul>
+                    </div>
+                    <div style="background: #fef3c7; padding: 12px; border-radius: 8px;">
+                        <strong>품질 검토:</strong>
+                        <span class="badge" style="background: #c53030; color: white;">critic</span> 스펙 누락 검토
+                        <span class="badge" style="background: #2b6cb0; color: white;">editor</span> 전달력 검토
+                    </div>
+                `
+            },
+            'stage-prototype': {
+                title: '4단계: 프로토타입 (ux-ui)',
+                content: `
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">사용되는 스킬</h4>
+                        <ul class="detail-list">
+                            <li><span class="badge" style="background: #2563eb; color: white;">ux-ui</span> HTML 유저플로우, 인터랙티브 프로토타입, 와이어프레임 생성</li>
+                        </ul>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #4285f4; margin-bottom: 10px;">참여하는 에이전트</h4>
+                        <ul class="detail-list">
+                            <li><span class="badge" style="background: #2563eb; color: white;">pm-orchestrator</span> 프로토타입 요구사항 정리</li>
+                        </ul>
+                    </div>
+                    <div style="background: #e2e8f0; padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                        <strong>산출물:</strong> -userflow.html, prototype/, -wireframe.md
+                    </div>
+                    <div style="background: #ebf8ff; padding: 12px; border-radius: 8px;">
+                        <strong>코드베이스 참조:</strong> gguge-uncle-web, teacher-gguge-front (기존 UI 패턴 유지)
+                    </div>
+                `
+            },
+            'stage-publish': {
+                title: '5단계: 발행 (html-report + notion-archive)',
+                content: `
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #2563eb; margin-bottom: 10px;">사용되는 스킬</h4>
+                        <ul class="detail-list">
+                            <li><span class="badge" style="background: #fef3c7; color: #92400e;">html-report</span> 분석 결과를 시각화 보고서로 변환</li>
+                            <li><span class="badge green">notion-archive</span> 완성된 문서를 노션 DB에 발행</li>
+                        </ul>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="color: #4285f4; margin-bottom: 10px;">참여하는 에이전트</h4>
+                        <ul class="detail-list">
+                            <li><span class="badge" style="background: #2563eb; color: white;">pm-orchestrator</span> 발행 프로세스 조율</li>
+                            <li><span class="badge" style="background: #2b6cb0; color: white;">editor</span> 발행 전 최종 전달력 검토</li>
+                        </ul>
+                    </div>
+                    <div style="background: #d1fae5; padding: 12px; border-radius: 8px;">
+                        <strong>노션 스테이지 매핑:</strong><br>
+                        S1-진단 → S2-제안서 → S3-PRD → S4-성과분석
+                    </div>
+                `
+            },
+            // 워크플로우 빌더 Phase 모달
+            'wf-phase1': {
+                title: '🎯 Phase 1: Discovery - 직무/목적 파악',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;">6가지 질문으로 사용자의 업무 프로세스를 파악합니다.</p>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px;">
+                        <div style="background: #dbeafe; padding: 12px; border-radius: 8px; border-left: 3px solid #3b82f6;">
+                            <strong style="color: #1e40af;">Step 1. 직무 파악</strong><br>
+                            <span style="font-size: 0.9rem; color: #3b82f6;">"현재 어떤 직무로 일하고 계세요?"</span>
+                        </div>
+                        <div style="background: #dbeafe; padding: 12px; border-radius: 8px; border-left: 3px solid #3b82f6;">
+                            <strong style="color: #1e40af;">Step 2. 목적 파악</strong><br>
+                            <span style="font-size: 0.9rem; color: #3b82f6;">"어떤 작업을 자동화하고 싶으세요?"</span>
+                        </div>
+                        <div style="background: #dbeafe; padding: 12px; border-radius: 8px; border-left: 3px solid #3b82f6;">
+                            <strong style="color: #1e40af;">Step 3. 현재 프로세스</strong><br>
+                            <span style="font-size: 0.9rem; color: #3b82f6;">"평소에 이 작업을 어떻게 하고 계세요?"</span>
+                        </div>
+                        <div style="background: #dcfce7; padding: 12px; border-radius: 8px; border-left: 3px solid #22c55e;">
+                            <strong style="color: #166534;">Step 4. 중요/어려운 것</strong><br>
+                            <span style="font-size: 0.9rem; color: #22c55e;">"특히 중요한 것은? 어려운 부분은?"</span>
+                        </div>
+                        <div style="background: #dcfce7; padding: 12px; border-radius: 8px; border-left: 3px solid #22c55e;">
+                            <strong style="color: #166534;">Step 5. 트리거 확인</strong><br>
+                            <span style="font-size: 0.9rem; color: #22c55e;">"언제/어떤 상황에서 하시나요?"</span>
+                        </div>
+                        <div style="background: #dcfce7; padding: 12px; border-radius: 8px; border-left: 3px solid #22c55e;">
+                            <strong style="color: #166534;">Step 6. 기대 결과물</strong><br>
+                            <span style="font-size: 0.9rem; color: #22c55e;">"최종 결과물은 어떤 형태로?"</span>
+                        </div>
+                    </div>
+                    <div style="background: #fef3c7; padding: 12px; border-radius: 8px;">
+                        💡 <strong>모르면?</strong> 웹 검색으로 베스트 프랙티스 조사 → 단계 제안 → 확인
+                    </div>
+                `
+            },
+            'wf-phase2': {
+                title: '🏗️ Phase 2: Design - 구조 설계',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;">수집된 정보로 스킬과 에이전트 구조를 설계합니다.</p>
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #166534; margin-bottom: 10px;">산출물 유형 결정</h4>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                            <tr style="background: #f0fdf4;">
+                                <td style="padding: 10px; border: 1px solid #86efac;"><strong>스킬만</strong></td>
+                                <td style="padding: 10px; border: 1px solid #86efac;">단순 워크플로우, 도구 모음</td>
+                                <td style="padding: 10px; border: 1px solid #86efac; color: #64748b;">예: 리포트 생성</td>
+                            </tr>
+                            <tr style="background: #f0fdf4;">
+                                <td style="padding: 10px; border: 1px solid #86efac;"><strong>에이전트만</strong></td>
+                                <td style="padding: 10px; border: 1px solid #86efac;">특정 관점/역할 필요</td>
+                                <td style="padding: 10px; border: 1px solid #86efac; color: #64748b;">예: 법무 검토</td>
+                            </tr>
+                            <tr style="background: #dcfce7;">
+                                <td style="padding: 10px; border: 1px solid #86efac;"><strong>스킬 + 에이전트</strong></td>
+                                <td style="padding: 10px; border: 1px solid #86efac;">복잡한 워크플로우 + 전문 역할</td>
+                                <td style="padding: 10px; border: 1px solid #86efac; color: #64748b;">예: 다관점 분석</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div style="background: #dcfce7; padding: 12px; border-radius: 8px;">
+                        <strong>스킬 설계:</strong> 이름, 트리거 키워드, 워크플로우 단계, 필요 리소스 (scripts/, references/, assets/)
+                    </div>
+                `
+            },
+            'wf-phase3': {
+                title: '👀 Phase 3: Review - 사용자 확인',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;">설계 완료 후 <strong>반드시</strong> 사용자에게 전체 구조를 보여주고 확인받습니다.</p>
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #92400e; margin-bottom: 10px;">확인 내용 체크리스트</h4>
+                        <ul class="detail-list">
+                            <li>✅ 워크플로우 개요 (이름, 목적, 트리거)</li>
+                            <li>✅ 전체 구조 다이어그램</li>
+                            <li>✅ 스킬 구성 (이름, 설명, 단계)</li>
+                            <li>✅ 에이전트 구성 (해당 시)</li>
+                            <li>✅ 기대 결과물 (형태, 필수 내용, 저장 위치)</li>
+                            <li>✅ 필요 리소스 (scripts, references, assets)</li>
+                        </ul>
+                    </div>
+                    <div style="background: #fef3c7; padding: 12px; border-radius: 8px;">
+                        <strong>피드백 반영:</strong> 사용자 피드백 → 설계 수정 → 다시 확인 (승인될 때까지 반복)
+                    </div>
+                `
+            },
+            'wf-phase4': {
+                title: '⚙️ Phase 4: Generation - 스킬/에이전트 생성',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;">사용자 승인 후 스킬과 에이전트를 실제로 생성합니다.</p>
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #6b21a8; margin-bottom: 10px;">스킬 생성</h4>
+                        <div style="background: #f3e8ff; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; margin-bottom: 10px;">
+                            python3 ~/.claude/skills/skill-creator/scripts/init_skill.py {skill-name}
+                        </div>
+                        <ul class="detail-list">
+                            <li><strong>SKILL.md 작성</strong> - Frontmatter (name, description), 워크플로우 단계</li>
+                            <li><strong>저장 위치</strong> - ~/.claude/skills/ (전역) 또는 .claude/skills/ (프로젝트)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #6b21a8; margin-bottom: 10px;">에이전트 생성 (필요시)</h4>
+                        <ul class="detail-list">
+                            <li><strong>파일 생성</strong> - .claude/agents/{agent-name}.md</li>
+                            <li><strong>구조</strong> - Role, Tools, Instructions 섹션 포함</li>
+                            <li><strong>CLAUDE.md 업데이트</strong> - 새 스킬/에이전트 등록</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'wf-phase5': {
+                title: '✅ Phase 5: Validation - 테스트 및 개선',
+                content: `
+                    <p style="margin-bottom: 15px; color: #4a5568;">생성된 스킬/에이전트를 테스트하고 개선합니다.</p>
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #9d174d; margin-bottom: 10px;">테스트 방법</h4>
+                        <ul class="detail-list">
+                            <li><span class="badge" style="background: #fce7f3; color: #9d174d;">1</span> 새 대화에서 트리거 키워드로 스킬 호출</li>
+                            <li><span class="badge" style="background: #fce7f3; color: #9d174d;">2</span> 예상대로 동작하는지 확인</li>
+                            <li><span class="badge" style="background: #fce7f3; color: #9d174d;">3</span> 에이전트가 있으면 Task 도구로 호출 테스트</li>
+                            <li><span class="badge" style="background: #fce7f3; color: #9d174d;">4</span> 문제 있으면 수정</li>
+                        </ul>
+                    </div>
+                    <div style="background: #fce7f3; padding: 12px; border-radius: 8px;">
+                        <h4 style="color: #9d174d; margin-bottom: 8px;">개선 포인트</h4>
+                        <ul style="margin: 0; padding-left: 20px; color: #831843;">
+                            <li>트리거 안 됨 → description 키워드 개선</li>
+                            <li>단계 누락 → 워크플로우 단계 추가</li>
+                            <li>에이전트 역할 불명확 → Instructions 보강</li>
+                        </ul>
+                    </div>
+                `
+            }
+        };
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.getElementById(`slide${currentSlide}`).classList.add('active');
+            document.getElementById('currentSlide').textContent = currentSlide;
+
+            // 버튼 상태 업데이트
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+
+        // 인터랙티브 카드 토글
+        function toggleCard(card) {
+            const wasExpanded = card.classList.contains('expanded');
+
+            // 다른 카드들 닫기
+            document.querySelectorAll('.interactive-card').forEach(c => {
+                c.classList.remove('expanded');
+            });
+
+            // 클릭한 카드 토글
+            if (!wasExpanded) {
+                card.classList.add('expanded');
+            }
+        }
+
+        // 모달 열기
+        function openModal(type) {
+            const modal = document.getElementById('modalOverlay');
+            const modalBody = document.getElementById('modalBody');
+            const content = modalContents[type];
+
+            if (content) {
+                modalBody.innerHTML = `<h3>${content.title}</h3>${content.content}`;
+                modal.classList.add('active');
+            }
+        }
+
+        // 모달 닫기
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('modalOverlay')) {
+                document.getElementById('modalOverlay').classList.remove('active');
+            }
+        }
+
+        // 이미지 갤러리 기능 (슬라이드 7)
+        let currentGalleryImage = 1;
+        const totalGalleryImages = 10;
+
+        function updateGalleryImage() {
+            const img = document.getElementById('galleryImage');
+            const counter = document.getElementById('galleryCounter');
+            const dots = document.querySelectorAll('.gallery-dot');
+
+            // 이미지 번호를 2자리로 포맷 (01, 02, ... 10)
+            const imageNum = currentGalleryImage.toString().padStart(2, '0');
+            img.src = `data-analysis-images/${imageNum}.png`;
+            counter.textContent = `${currentGalleryImage} / ${totalGalleryImages}`;
+
+            // 닷 인디케이터 업데이트
+            dots.forEach((dot, index) => {
+                if (index + 1 === currentGalleryImage) {
+                    dot.style.background = 'white';
+                } else {
+                    dot.style.background = 'rgba(255,255,255,0.4)';
+                }
+            });
+        }
+
+        function nextGalleryImage() {
+            currentGalleryImage++;
+            if (currentGalleryImage > totalGalleryImages) currentGalleryImage = 1;
+            updateGalleryImage();
+        }
+
+        function prevGalleryImage() {
+            currentGalleryImage--;
+            if (currentGalleryImage < 1) currentGalleryImage = totalGalleryImages;
+            updateGalleryImage();
+        }
+
+        function goToGalleryImage(n) {
+            currentGalleryImage = n;
+            updateGalleryImage();
+        }
+
+        // 이미지 확대 기능
+        let isZoomOpen = false;
+
+        function openImageZoom() {
+            const overlay = document.getElementById('imageZoomOverlay');
+            const zoomedImg = document.getElementById('zoomedImage');
+            const imageNum = currentGalleryImage.toString().padStart(2, '0');
+
+            zoomedImg.src = `data-analysis-images/${imageNum}.png`;
+            document.getElementById('zoomCounter').textContent = `${currentGalleryImage} / ${totalGalleryImages}`;
+
+            overlay.style.display = 'flex';
+            isZoomOpen = true;
+        }
+
+        function closeImageZoom() {
+            document.getElementById('imageZoomOverlay').style.display = 'none';
+            isZoomOpen = false;
+        }
+
+        function updateZoomedImage() {
+            const zoomedImg = document.getElementById('zoomedImage');
+            const imageNum = currentGalleryImage.toString().padStart(2, '0');
+            zoomedImg.src = `data-analysis-images/${imageNum}.png`;
+            document.getElementById('zoomCounter').textContent = `${currentGalleryImage} / ${totalGalleryImages}`;
+        }
+
+        // 이미지 갤러리 2 기능 (슬라이드 13 - 제안서 작성)
+        let currentGallery2Image = 1;
+        const totalGallery2Images = 7;
+        let isZoom2Open = false;
+
+        function updateGallery2Image() {
+            const img = document.getElementById('gallery2Image');
+            const counter = document.getElementById('gallery2Counter');
+            const dots = document.querySelectorAll('.gallery2-dot');
+
+            const imageNum = currentGallery2Image.toString().padStart(2, '0');
+            img.src = `proposal-images/${imageNum}.png`;
+            counter.textContent = `${currentGallery2Image} / ${totalGallery2Images}`;
+
+            dots.forEach((dot, index) => {
+                if (index + 1 === currentGallery2Image) {
+                    dot.style.background = 'white';
+                } else {
+                    dot.style.background = 'rgba(255,255,255,0.4)';
+                }
+            });
+        }
+
+        function nextGallery2Image() {
+            currentGallery2Image++;
+            if (currentGallery2Image > totalGallery2Images) currentGallery2Image = 1;
+            updateGallery2Image();
+        }
+
+        function prevGallery2Image() {
+            currentGallery2Image--;
+            if (currentGallery2Image < 1) currentGallery2Image = totalGallery2Images;
+            updateGallery2Image();
+        }
+
+        function goToGallery2Image(n) {
+            currentGallery2Image = n;
+            updateGallery2Image();
+        }
+
+        // 이미지 갤러리 2 확대 기능
+        function openImageZoom2() {
+            const overlay = document.getElementById('imageZoomOverlay');
+            const zoomedImg = document.getElementById('zoomedImage');
+            const imageNum = currentGallery2Image.toString().padStart(2, '0');
+
+            zoomedImg.src = `proposal-images/${imageNum}.png`;
+            document.getElementById('zoomCounter').textContent = `${currentGallery2Image} / ${totalGallery2Images}`;
+
+            overlay.style.display = 'flex';
+            isZoom2Open = true;
+            isZoomOpen = false;
+        }
+
+        function updateZoomedImage2() {
+            const zoomedImg = document.getElementById('zoomedImage');
+            const imageNum = currentGallery2Image.toString().padStart(2, '0');
+            zoomedImg.src = `proposal-images/${imageNum}.png`;
+            document.getElementById('zoomCounter').textContent = `${currentGallery2Image} / ${totalGallery2Images}`;
+        }
+
+        // 통합 확대 모드 헬퍼 함수
+        function closeAllZoom() {
+            document.getElementById('imageZoomOverlay').style.display = 'none';
+            isZoomOpen = false;
+            isZoom2Open = false;
+        }
+
+        function zoomPrevImage() {
+            if (isZoomOpen) {
+                prevGalleryImage();
+                updateZoomedImage();
+            } else if (isZoom2Open) {
+                prevGallery2Image();
+                updateZoomedImage2();
+            }
+        }
+
+        function zoomNextImage() {
+            if (isZoomOpen) {
+                nextGalleryImage();
+                updateZoomedImage();
+            } else if (isZoom2Open) {
+                nextGallery2Image();
+                updateZoomedImage2();
+            }
+        }
+
+        // 키보드 네비게이션
+        document.addEventListener('keydown', function(e) {
+            // 이미지 확대 모드에서 (양쪽 갤러리 통합)
+            if (isZoomOpen || isZoom2Open) {
+                if (e.key === 'Escape') {
+                    closeAllZoom();
+                    return;
+                } else if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    zoomPrevImage();
+                    return;
+                } else if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    zoomNextImage();
+                    return;
+                }
+                return;
+            }
+
+            // 모달이 열려있으면 ESC로 닫기
+            if (document.getElementById('modalOverlay').classList.contains('active')) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+                return;
+            }
+
+            // 슬라이드 7 (갤러리 1)에서 A/D 키로 이미지 탐색
+            if (currentSlide === 7) {
+                if (e.key === 'a' || e.key === 'A') {
+                    e.preventDefault();
+                    prevGalleryImage();
+                    return;
+                } else if (e.key === 'd' || e.key === 'D') {
+                    e.preventDefault();
+                    nextGalleryImage();
+                    return;
+                }
+            }
+
+            // 슬라이드 13 (갤러리 2)에서 A/D 키로 이미지 탐색
+            if (currentSlide === 13) {
+                if (e.key === 'a' || e.key === 'A') {
+                    e.preventDefault();
+                    prevGallery2Image();
+                    return;
+                } else if (e.key === 'd' || e.key === 'D') {
+                    e.preventDefault();
+                    nextGallery2Image();
+                    return;
+                }
+            }
+
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+
+        // 프롬프트 탭 전환 (슬라이드 11용)
+        function switchPromptTab(tabName) {
+            // 모든 탭 버튼 비활성화
+            document.querySelectorAll('#slide11 .tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // 모든 탭 컨텐츠 숨기기
+            document.querySelectorAll('#slide11 .tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // 클릭된 탭 활성화
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        // 초기화
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>

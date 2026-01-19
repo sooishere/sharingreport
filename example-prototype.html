@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에듀 과제관리 - 핵심화면</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: #f5f7fa;
+            padding: 40px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 16px;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 화면 그리드 */
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        /* 화면 카드 */
+        .screen-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .screen-header {
+            background: #e17055;
+            color: white;
+            padding: 16px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .screen-header .step {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        /* 모바일 프레임 */
+        .mobile-frame {
+            background: #fafafa;
+            padding: 0;
+            min-height: 500px;
+        }
+
+        /* 상태바 */
+        .status-bar {
+            background: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 600;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .status-bar-icons {
+            display: flex;
+            gap: 4px;
+        }
+
+        /* 네비게이션 바 */
+        .nav-bar {
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .nav-logo {
+            font-size: 20px;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 16px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* 페이지 헤더 */
+        .page-header {
+            padding: 20px 16px;
+            background: white;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* 탭 */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 0 16px 16px;
+            background: white;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .tab.active {
+            background: #2c3e50;
+            color: white;
+        }
+
+        /* 컨텐츠 영역 */
+        .content {
+            padding: 16px;
+        }
+
+        /* 과제 카드 */
+        .assignment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        .assignment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .assignment-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        .assignment-class {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .assignment-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-submitted {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-complete {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-missed {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        .assignment-deadline {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #e17055;
+            margin-top: 8px;
+        }
+
+        .assignment-deadline.urgent {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        /* 과제 상세 */
+        .detail-section {
+            padding: 16px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .detail-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+
+        .detail-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #444;
+        }
+
+        .detail-attachments {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .attachment {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* 제출 영역 */
+        .submit-section {
+            padding: 16px;
+            background: white;
+        }
+
+        .submit-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .submit-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: none;
+            background: #fafafa;
+        }
+
+        .submit-attachments {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .add-attachment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            color: #aaa;
+            font-size: 24px;
+        }
+
+        /* 버튼 */
+        .btn {
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #e17055;
+            color: white;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        /* 피드백 영역 */
+        .feedback-section {
+            padding: 16px;
+            background: #f0f7ff;
+            margin: 16px;
+            border-radius: 12px;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .feedback-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0984e3;
+        }
+
+        .feedback-score {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0984e3;
+        }
+
+        .feedback-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .teacher-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .teacher-avatar {
+            width: 24px;
+            height: 24px;
+            background: #ddd;
+            border-radius: 50%;
+        }
+
+        /* 하단 고정 버튼 */
+        .bottom-fixed {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* 플로우 화살표 */
+        .flow-arrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #ccc;
+            font-size: 32px;
+        }
+
+        /* 섹션 제목 */
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e17055;
+            display: inline-block;
+        }
+
+        /* 알림 배너 */
+        .notification-banner {
+            background: #fff3cd;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #856404;
+        }
+
+        /* 내 제출 내역 */
+        .my-submission {
+            padding: 16px;
+            background: #f8f9fa;
+            margin: 16px;
+            border-radius: 12px;
+        }
+
+        .my-submission-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .my-submission-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .my-submission-files {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .submission-file {
+            width: 60px;
+            height: 60px;
+            background: #e9ecef;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666;
+        }
+
+        /* 수정 버튼 */
+        .edit-btn {
+            font-size: 12px;
+            color: #0984e3;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 8px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>에듀 과제관리 - 핵심화면</h1>
+        <p class="subtitle">수강생의 과제 확인 → 제출 → 피드백 확인 플로우</p>
+
+        <div class="screens-grid">
+            <!-- 화면 1: 과제 목록 -->
+            <div class="screen-card">
+                <div class="screen-header">
+                    <span class="step">1</span>
+                    과제 목록
+                </div>
+                <div class="mobile-frame">
+                    <div class="status-bar">
+                        <span>9:41</span>
+                        <div class="status-bar-icons">📶 🔋</div>
+                    </div>
+                    <div class="nav-bar">
+                        <div class="nav-logo">⊞</div>
+                        <div class="nav-icons">🔍 💬 🔔</div>
+                    </div>
+                    <div class="page-header">
+                        <div class="page-title">제출해야 할 과제가 3개 있어요</div>
+                        <div class="page-subtitle">2025년 12월 4일 수요일</div>
+                    </div>
+                    <div class="tabs">
+                        <div class="tab active">과제</div>
+                        <div class="tab">수강 예정</div>
+                        <div class="tab">다시보기</div>
+                        <div class="tab">구독 중인 수업</div>
+                    </div>
+                    <div class="content">
+                        <div class="assignment-card">
+                            <div class="assignment-header">
+                                <div>
+                                    <div class="assignment-title">레고 작품 사진 제출하기</div>
+                                    <div class="assignment-class">무한한 상상력! 레고로 완성하는 작은 세상</div>
+                                </div>
+                                <div class="assignment-status status-pending">제출전</div>
+                            </div>
+                            <div class="assignment-deadline urgent">⏰ D-1 | 내일 23:59까지</div>
+                        </div>
+                        <div class="assignment-card">
+                            <div class="assignment-header">
+                                <div>
+                                    <div class="assignment-title">동물 관찰 일기 작성</div>
+                                    <div class="assignment-class">신기한 동물의 세계</div>
+                                </div>
+                                <div class="assignment-status status-pending">제출전</div>
+                            </div>
+                            <div class="assignment-deadline">⏰ D-5 | 12월 9일까지</div>
+                        </div>
+                        <div class="assignment-card">
+                            <div class="assignment-header">
+                                <div>
+                                    <div class="assignment-title">나만의 이야기 만들기</div>
+                                    <div class="assignment-class">창의력 글쓰기 교실</div>
+                                </div>
+                                <div class="assignment-status status-submitted">제출완료</div>
+                            </div>
+                            <div class="assignment-deadline" style="color: #28a745;">✓ 11월 30일 제출</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 화면 2: 과제 상세 -->
+            <div class="screen-card">
+                <div class="screen-header">
+                    <span class="step">2</span>
+                    과제 상세 (제출 전)
+                </div>
+                <div class="mobile-frame">
+                    <div class="status-bar">
+                        <span>9:41</span>
+                        <div class="status-bar-icons">📶 🔋</div>
+                    </div>
+                    <div class="nav-bar">
+                        <div style="font-size: 18px;">← 과제</div>
+                        <div></div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="assignment-status status-pending" style="margin-bottom: 12px;">제출전</div>
+                        <div class="detail-title">레고 작품 사진 제출하기</div>
+                        <div class="detail-meta">
+                            <span>무한한 상상력! 레고로 완성하는 작은 세상</span>
+                        </div>
+                        <div class="assignment-deadline urgent" style="margin-bottom: 16px;">
+                            ⏰ 제출 마감: 2025년 12월 5일 (목) 23:59
+                        </div>
+                        <div class="detail-content">
+                            이번 수업에서 만든 레고 작품을 사진으로 찍어서 제출해주세요!<br><br>
+                            📸 제출 방법:<br>
+                            1. 완성된 작품을 여러 각도에서 촬영<br>
+                            2. 가장 잘 나온 사진 2~3장 선택<br>
+                            3. 작품에 대한 간단한 설명 작성
+                        </div>
+                        <div class="detail-attachments">
+                            <div class="attachment">📄 과제 안내서.pdf</div>
+                            <div class="attachment">🖼 예시 사진.jpg</div>
+                        </div>
+                    </div>
+                    <div class="submit-section">
+                        <div class="submit-title">내 제출물</div>
+                        <textarea class="submit-textarea" placeholder="과제 내용을 입력해주세요..."></textarea>
+                        <div class="submit-attachments">
+                            <div class="add-attachment">+</div>
+                            <div style="font-size: 12px; color: #888; display: flex; align-items: center;">이미지, 영상, 문서 첨부</div>
+                        </div>
+                        <button class="btn btn-primary">제출하기</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 화면 3: 제출 완료 / 피드백 대기 -->
+            <div class="screen-card">
+                <div class="screen-header">
+                    <span class="step">3</span>
+                    제출 완료 (피드백 대기)
+                </div>
+                <div class="mobile-frame">
+                    <div class="status-bar">
+                        <span>9:41</span>
+                        <div class="status-bar-icons">📶 🔋</div>
+                    </div>
+                    <div class="nav-bar">
+                        <div style="font-size: 18px;">← 과제</div>
+                        <div></div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="assignment-status status-submitted" style="margin-bottom: 12px;">제출완료</div>
+                        <div class="detail-title">레고 작품 사진 제출하기</div>
+                        <div class="detail-meta">
+                            <span>무한한 상상력! 레고로 완성하는 작은 세상</span>
+                        </div>
+                        <div style="font-size: 13px; color: #0c5460; margin-bottom: 16px;">
+                            ✓ 2025년 12월 4일 14:30 제출
+                        </div>
+                        <div class="detail-content">
+                            이번 수업에서 만든 레고 작품을 사진으로 찍어서 제출해주세요!<br><br>
+                            📸 제출 방법:<br>
+                            1. 완성된 작품을 여러 각도에서 촬영<br>
+                            2. 가장 잘 나온 사진 2~3장 선택<br>
+                            3. 작품에 대한 간단한 설명 작성
+                        </div>
+                    </div>
+                    <div class="my-submission">
+                        <div class="my-submission-title">내가 제출한 내용</div>
+                        <div class="my-submission-content">
+                            우주 정거장을 만들어봤어요! 태양광 패널이랑 안테나도 달았어요. 우주인이 타고 있는 우주선도 만들었습니다.
+                        </div>
+                        <div class="my-submission-files">
+                            <div class="submission-file">🖼<br>사진1</div>
+                            <div class="submission-file">🖼<br>사진2</div>
+                            <div class="submission-file">🖼<br>사진3</div>
+                        </div>
+                        <div class="edit-btn">수정하기</div>
+                    </div>
+                    <div style="padding: 16px; text-align: center; color: #888; font-size: 13px;">
+                        ⏳ 선생님의 피드백을 기다리고 있어요
+                    </div>
+                </div>
+            </div>
+
+            <!-- 화면 4: 피드백 완료 -->
+            <div class="screen-card">
+                <div class="screen-header">
+                    <span class="step">4</span>
+                    피드백 완료
+                </div>
+                <div class="mobile-frame">
+                    <div class="status-bar">
+                        <span>9:41</span>
+                        <div class="status-bar-icons">📶 🔋</div>
+                    </div>
+                    <div class="nav-bar">
+                        <div style="font-size: 18px;">← 과제</div>
+                        <div></div>
+                    </div>
+                    <div class="notification-banner">
+                        🔔 선생님이 피드백을 남겼어요!
+                    </div>
+                    <div class="detail-section" style="padding-bottom: 8px;">
+                        <div class="assignment-status status-complete" style="margin-bottom: 12px;">피드백 완료</div>
+                        <div class="detail-title">레고 작품 사진 제출하기</div>
+                        <div class="detail-meta">
+                            <span>무한한 상상력! 레고로 완성하는 작은 세상</span>
+                        </div>
+                    </div>
+                    <div class="feedback-section">
+                        <div class="feedback-header">
+                            <div class="feedback-title">선생님 피드백</div>
+                            <div class="feedback-score">95점</div>
+                        </div>
+                        <div class="feedback-content">
+                            우와! 우주 정거장 정말 멋지게 만들었네요! 🚀<br><br>
+                            태양광 패널 디테일이 특히 인상적이에요. 우주인과 우주선까지 함께 만들어서 스토리가 느껴지는 작품이에요.<br><br>
+                            다음에는 지구나 달도 같이 만들어보면 어떨까요?
+                        </div>
+                        <div class="teacher-info">
+                            <div class="teacher-avatar"></div>
+                            <span>김레고 선생님 · 12월 5일 작성</span>
+                        </div>
+                    </div>
+                    <div class="my-submission">
+                        <div class="my-submission-title">내가 제출한 내용</div>
+                        <div class="my-submission-content">
+                            우주 정거장을 만들어봤어요! 태양광 패널이랑 안테나도 달았어요.
+                        </div>
+                        <div class="my-submission-files">
+                            <div class="submission-file">🖼<br>사진1</div>
+                            <div class="submission-file">🖼<br>사진2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
