@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>티처 과제관리 - 핵심화면</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,23 +15,63 @@
         }
 
         body {
-            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-            background: #f5f7fa;
-            padding: 40px;
-            color: #333;
+            font-family: 'Noto Sans KR', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 50px 40px;
+            color: #0f172a;
+            min-height: 100vh;
         }
 
+        /* Subtle grid pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(rgba(15, 23, 42, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 23, 42, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Industrial animations */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-up {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+
         h1 {
+            font-family: 'DM Sans', sans-serif;
             text-align: center;
-            margin-bottom: 16px;
-            color: #2c3e50;
+            margin-bottom: 12px;
+            color: #0f172a;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
             text-align: center;
-            color: #888;
-            margin-bottom: 40px;
-            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 50px;
+            font-size: 15px;
+            font-weight: 500;
         }
 
         .container {
@@ -43,55 +86,82 @@
             gap: 40px;
         }
 
-        /* 화면 카드 */
+        /* 화면 카드 - Industrial/Refined */
         .screen-card {
             background: white;
-            border-radius: 16px;
+            border-radius: 2px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow:
+                0 1px 3px rgba(0,0,0,0.04),
+                0 8px 24px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .screen-card:hover {
+            box-shadow:
+                0 4px 12px rgba(0,0,0,0.06),
+                0 24px 48px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
         }
 
         .screen-header {
-            background: #2c3e50;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: white;
-            padding: 16px 20px;
+            padding: 18px 24px;
+            font-family: 'DM Sans', sans-serif;
             font-weight: 600;
             font-size: 14px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            position: relative;
+        }
+
+        .screen-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
         }
 
         .screen-header .step {
-            background: rgba(255,255,255,0.2);
-            padding: 4px 10px;
-            border-radius: 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 5px 14px;
+            border-radius: 2px;
             font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
-        /* 웹 프레임 */
+        /* 웹 프레임 - Clean workspace */
         .web-frame {
-            background: #fafafa;
-            min-height: 500px;
+            background: #f8fafc;
+            min-height: 520px;
             display: flex;
         }
 
-        /* 사이드바 */
+        /* 사이드바 - Refined Navigation */
         .sidebar {
-            width: 200px;
-            background: white;
-            border-right: 1px solid #e9ecef;
-            padding: 20px 0;
+            width: 220px;
+            background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
+            border-right: 1px solid #e2e8f0;
+            padding: 24px 0;
             flex-shrink: 0;
         }
 
         .sidebar-logo {
-            padding: 0 20px 20px;
+            padding: 0 24px 24px;
+            font-family: 'DM Sans', sans-serif;
             font-size: 18px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            color: #0f172a;
         }
 
         .sidebar-menu {
@@ -99,24 +169,27 @@
         }
 
         .sidebar-item {
-            padding: 12px 20px;
+            padding: 14px 24px;
             font-size: 14px;
-            color: #666;
+            color: #64748b;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
         }
 
         .sidebar-item:hover {
-            background: #f8f9fa;
+            background: linear-gradient(90deg, #f1f5f9 0%, transparent 100%);
+            color: #0f172a;
         }
 
         .sidebar-item.active {
-            background: #f0f0f0;
-            color: #2c3e50;
+            background: linear-gradient(90deg, #eff6ff 0%, transparent 100%);
+            color: #0f172a;
             font-weight: 600;
-            border-left: 3px solid #2c3e50;
+            border-left-color: #3b82f6;
         }
 
         .sidebar-submenu {
@@ -172,30 +245,47 @@
             border-bottom-color: #2c3e50;
         }
 
-        /* 버튼 */
+        /* 버튼 - Industrial Refined */
         .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 12px 22px;
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             border: none;
+            transition: all 0.2s ease;
         }
 
         .btn-primary {
-            background: #2c3e50;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: white;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.3);
         }
 
         .btn-secondary {
-            background: #f5f5f5;
-            color: #666;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
         }
 
         .btn-outline {
             background: white;
-            color: #2c3e50;
-            border: 1px solid #2c3e50;
+            color: #0f172a;
+            border: 2px solid #0f172a;
+        }
+
+        .btn-outline:hover {
+            background: #0f172a;
+            color: white;
         }
 
         /* 검색 & 필터 */
@@ -227,12 +317,13 @@
             gap: 6px;
         }
 
-        /* 테이블 */
+        /* 테이블 - Clean Data Grid */
         .table-container {
             background: white;
-            border-radius: 12px;
+            border-radius: 2px;
             overflow: hidden;
-            border: 1px solid #e9ecef;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
 
         .table {
@@ -241,19 +332,22 @@
         }
 
         .table th {
-            background: #f8f9fa;
-            padding: 14px 16px;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 16px 18px;
             text-align: left;
-            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
             font-weight: 600;
-            color: #666;
-            border-bottom: 1px solid #e9ecef;
+            color: #64748b;
+            border-bottom: 2px solid #e2e8f0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .table td {
-            padding: 16px;
+            padding: 18px;
             font-size: 14px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f1f5f9;
             vertical-align: middle;
         }
 
@@ -261,68 +355,83 @@
             border-bottom: none;
         }
 
-        .table tr:hover {
-            background: #fafafa;
+        .table tr {
+            transition: all 0.2s ease;
         }
 
-        /* 상태 배지 */
+        .table tr:hover {
+            background: linear-gradient(90deg, #f8fafc 0%, transparent 100%);
+        }
+
+        /* 상태 배지 - Sharp & Modern */
         .status-badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .status-active {
-            background: #d4edda;
-            color: #155724;
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #166534;
         }
 
         .status-pending {
-            background: #fff3cd;
-            color: #856404;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
         }
 
         .status-closed {
-            background: #e2e3e5;
-            color: #383d41;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: #475569;
         }
 
-        /* 진행률 바 */
+        /* 진행률 바 - Modern Track */
         .progress-bar {
             width: 100px;
-            height: 6px;
-            background: #e9ecef;
-            border-radius: 3px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
             overflow: hidden;
+            position: relative;
         }
 
         .progress-fill {
             height: 100%;
-            background: #28a745;
-            border-radius: 3px;
+            background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+            border-radius: 4px;
+            transition: width 0.4s ease;
         }
 
         .progress-text {
+            font-family: 'DM Sans', sans-serif;
             font-size: 12px;
-            color: #666;
-            margin-top: 4px;
+            color: #64748b;
+            margin-top: 6px;
+            font-weight: 500;
         }
 
-        /* 폼 영역 */
+        /* 폼 영역 - Clean Sections */
         .form-section {
             background: white;
-            border-radius: 12px;
-            padding: 24px;
-            border: 1px solid #e9ecef;
-            margin-bottom: 20px;
+            border-radius: 2px;
+            padding: 28px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
 
         .form-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #2c3e50;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #0f172a;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
         }
 
         .form-group {
